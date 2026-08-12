@@ -1,0 +1,8 @@
+[
+  { "id": "player", "name": "Adventurer", "price": 0, "prefix": "player" },
+  { "id": "rick", "name": "Rick", "price": 500, "prefix": "rick" },
+  { "id": "morty", "name": "Morty", "price": 500, "prefix": "morty" },
+  { "id": "spiderman", "name": "Spider-Hero", "price": 1000, "prefix": "spiderman" },
+  { "id": "goku", "name": "Goku", "price": 2000, "prefix": "goku" },
+  { "id": "master", "name": "The Master", "price": 0, "prefix": "master", "masterOnly": true }
+]

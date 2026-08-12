@@ -73,7 +73,7 @@ export class WizardTrainingScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.dialogue = new DialogueBox(this, 30, 445, 900, 165);
+    this.dialogue = new DialogueBox(this, 30, 445, this.scale.width - 60, 165);
 
     this.hintText = this.add
       .text(this.scale.width - 20, this.scale.height - 18, 'E: continue   Esc: leave', {
@@ -147,13 +147,14 @@ export class WizardTrainingScene extends Phaser.Scene {
     this.state = 'asking';
     this.clearChoices();
 
-    const catName =
-      CATEGORIES.find((c) => c.id === q.category)?.name ?? q.category;
-    this.dialogue.say(`[${catName}] ${q.prompt}`, 'Wizard');
+    // The category is the answer's biggest clue — keep it hidden until the
+    // player commits to a choice.
+    this.dialogue.say(q.prompt, 'Wizard');
 
+    const choiceX = Math.round(this.scale.width * 0.45);
     q.choices.forEach((choice, i) => {
       const btn = this.add
-        .text(430, 120 + i * 78, `${CHOICE_LABELS[i]}) ${choice}`, {
+        .text(choiceX, 120 + i * 78, `${CHOICE_LABELS[i]}) ${choice}`, {
           fontFamily: 'monospace',
           fontSize: '15px',
           color: '#ffffff',
@@ -185,13 +186,15 @@ export class WizardTrainingScene extends Phaser.Scene {
       else btn.setAlpha(0.5);
     });
 
+    const catName =
+      CATEGORIES.find((c) => c.id === q.category)?.name ?? q.category;
     if (chosen === q.correctIndex) {
       const reward = this.doubleNext ? BASE_REWARD * 2 : BASE_REWARD;
       this.doubleNext = false;
       const streak = SaveManager.data.quizStreak + 1;
       SaveManager.addCoins(reward);
       SaveManager.setQuizStreak(streak);
-      let msg = `Correct! +${reward} coins. ${q.explanation}`;
+      let msg = `Correct! +${reward} coins. [${catName}] ${q.explanation}`;
       if (streak % STREAK_FOR_DOUBLE === 0) {
         this.doubleNext = true;
         msg += ` ${STREAK_FOR_DOUBLE} in a row — your next reward is DOUBLED!`;
@@ -202,7 +205,7 @@ export class WizardTrainingScene extends Phaser.Scene {
       SaveManager.setQuizStreak(0);
       this.doubleNext = false;
       this.dialogue.say(
-        `Not quite. The answer was "${q.choices[q.correctIndex]}". ${q.explanation} Fear not — another riddle awaits!`,
+        `Not quite — that was a ${catName} problem. The answer was "${q.choices[q.correctIndex]}". ${q.explanation} Fear not — another riddle awaits!`,
         'Wizard',
       );
     }

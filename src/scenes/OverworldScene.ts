@@ -23,8 +23,9 @@ interface BuildingDef {
 const BUILDINGS: BuildingDef[] = [
   { key: 'castle_grey', name: 'Castle Gate', x: 640, baselineY: 330, height: 280, targetScene: 'CastleSelect' },
   { key: 'training_hut', name: 'Training Hut', x: 210, baselineY: 540, height: 170, targetScene: 'WizardTraining' },
-  { key: 'store_coins', name: 'Skin Shop', x: 620, baselineY: 850, height: 170, comingIn: 'Phase 4' },
-  { key: 'castle_master_purple', name: 'Master Tower', x: 1080, baselineY: 540, height: 260, comingIn: 'Phase 6' },
+  { key: 'store_coins', name: 'Skin Shop', x: 620, baselineY: 850, height: 170, targetScene: 'Shop' },
+  // far right, mid-height, looming just above the purple pond
+  { key: 'castle_master_purple', name: 'Master Tower', x: 1050, baselineY: 560, height: 420, comingIn: 'Phase 6' },
 ];
 
 interface PlacedBuilding {

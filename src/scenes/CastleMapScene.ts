@@ -17,8 +17,14 @@ const NODE_RADIUS = 22;
  * is the castle door with the boss dragon perched above it. Node positions
  * come from castles.json so they're easy to tweak by hand.
  */
+/** The castle_map art's pixel size; the drawn fallback uses the same virtual space. */
+const MAP_IMAGE_W = 1376;
+const MAP_IMAGE_H = 768;
+
 export class CastleMapScene extends Phaser.Scene {
   private castle!: CastleDef;
+  /** Node positions projected from image space onto the current canvas. */
+  private nodeXY: { x: number; y: number }[] = [];
 
   constructor() {
     super('CastleMap');
@@ -35,6 +41,7 @@ export class CastleMapScene extends Phaser.Scene {
 
   create(): void {
     const color = themeColorNumber(this.castle);
+    this.projectNodes();
     this.drawBackground(color);
 
     const { width } = this.scale;
@@ -65,7 +72,7 @@ export class CastleMapScene extends Phaser.Scene {
     // The provided castle_map art already has the dragon perched on the
     // castle; only the drawn fallback needs its own boss sprite.
     if (!this.textures.exists('castle_map')) {
-      const bossPos = NODE_POSITIONS[9];
+      const bossPos = this.nodeXY[9];
       const bossKey =
         this.castle.id === 'arrays-hashing'
           ? 'dragon_base'
@@ -82,7 +89,7 @@ export class CastleMapScene extends Phaser.Scene {
       });
     }
 
-    NODE_POSITIONS.forEach((pos, i) => {
+    this.nodeXY.forEach((pos, i) => {
       this.makeNode(i, pos.x, pos.y, progress[i] === true, i === current, color);
     });
 
@@ -103,6 +110,29 @@ export class CastleMapScene extends Phaser.Scene {
       .on('pointerdown', () => this.scene.start('CastleSelect'));
 
     this.scene.bringToTop('HUD');
+  }
+
+  /**
+   * NODE_POSITIONS live in castle_map image pixels so they can be tweaked
+   * against the art directly. Project them through the same cover-fit
+   * transform the background uses, so they track the pads at any canvas size.
+   */
+  private projectNodes(): void {
+    const { width, height } = this.scale;
+    let iw = MAP_IMAGE_W;
+    let ih = MAP_IMAGE_H;
+    if (this.textures.exists('castle_map')) {
+      const src = this.textures.get('castle_map').getSourceImage();
+      iw = src.width;
+      ih = src.height;
+    }
+    const s = Math.max(width / iw, height / ih);
+    const ox = (width - iw * s) / 2;
+    const oy = (height - ih * s) / 2;
+    this.nodeXY = NODE_POSITIONS.map((p) => ({
+      x: ox + p.x * s,
+      y: oy + p.y * s,
+    }));
   }
 
   private makeNode(
@@ -215,19 +245,19 @@ export class CastleMapScene extends Phaser.Scene {
     }
     // winding dirt path connecting the nodes
     g.lineStyle(26, 0x8a6d4a, 1);
-    for (let i = 0; i < NODE_POSITIONS.length - 1; i++) {
-      const a = NODE_POSITIONS[i];
-      const b = NODE_POSITIONS[i + 1];
+    for (let i = 0; i < this.nodeXY.length - 1; i++) {
+      const a = this.nodeXY[i];
+      const b = this.nodeXY[i + 1];
       g.lineBetween(a.x, a.y, b.x, b.y);
     }
     g.lineStyle(18, 0xa3855c, 1);
-    for (let i = 0; i < NODE_POSITIONS.length - 1; i++) {
-      const a = NODE_POSITIONS[i];
-      const b = NODE_POSITIONS[i + 1];
+    for (let i = 0; i < this.nodeXY.length - 1; i++) {
+      const a = this.nodeXY[i];
+      const b = this.nodeXY[i + 1];
       g.lineBetween(a.x, a.y, b.x, b.y);
     }
     // castle silhouette behind the boss node
-    const bossPos = NODE_POSITIONS[9];
+    const bossPos = this.nodeXY[9];
     const castle = this.add.image(bossPos.x, bossPos.y - 24, 'castle_grey');
     castle.setScale(210 / castle.height).setOrigin(0.5, 1);
     castle.setTint(Phaser.Display.Color.IntegerToColor(color).lighten(20).color);

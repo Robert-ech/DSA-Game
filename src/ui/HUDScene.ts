@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { CATEGORIES } from '../data/categories';
+import { SKINS } from '../data/skinData';
 import {
   EVT_SAVE_CHANGED,
   EVT_TOAST,
@@ -81,7 +82,9 @@ export class HUDScene extends Phaser.Scene {
     this.coinText.setText(`${d.coins}`);
     this.swordText.setText(`${d.enchantedSwords.length}/${CATEGORIES.length}`);
     this.infinityText.setText(`∞ ${d.infinitySwords.length}/5`);
-    this.skinText.setText(`Skin: ${d.equippedSkin}`);
+    const skinName =
+      SKINS.find((s) => s.id === d.equippedSkin)?.name ?? d.equippedSkin;
+    this.skinText.setText(`Skin: ${skinName}`);
     this.masterText.setVisible(d.masterTitle);
   }
 

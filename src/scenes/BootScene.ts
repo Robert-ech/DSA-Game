@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { SKIN_DIRECTIONS, SKINS } from '../data/skinData';
 import { makePlaceholderTexture } from '../systems/Placeholders';
 import { TestRunner } from '../systems/TestRunner';
 
@@ -16,7 +17,7 @@ const IMAGE_MANIFEST: Record<string, string> = {
   player_sword_front: 'assets/characters/player_sword_front.png',
   player_sword_back: 'assets/characters/player_sword_back.png',
   wizard_front: 'assets/characters/wizard_front.png',
-  morty_front: 'assets/characters/morty_front.png',
+  // (skin frames like morty_front load dynamically from skins.json below)
   // enemies
   ice_dragon_small: 'assets/enemies/ice_dragon_small.png',
   ice_dragon_small_defeated: 'assets/enemies/ice_dragon_small_defeated.png',
@@ -91,6 +92,23 @@ export class BootScene extends Phaser.Scene {
     for (const [key, path] of Object.entries(IMAGE_MANIFEST)) {
       this.load.image(key, path);
     }
+
+    // Skin frames are data-driven off skins.json: attempt all four direction
+    // frames (plus sword variants) per prefix. Missing files simply fail to
+    // load — no placeholder — so skinFramesComplete() can tell truth from
+    // wish; incomplete skins show as "coming soon" in the shop.
+    for (const skin of SKINS) {
+      const wanted = [
+        ...SKIN_DIRECTIONS.map((d) => `${skin.prefix}_${d}`),
+        `${skin.prefix}_sword_front`,
+        `${skin.prefix}_sword_back`,
+      ];
+      for (const key of wanted) {
+        if (!IMAGE_MANIFEST[key] && !this.textures.exists(key)) {
+          this.load.image(key, `assets/characters/${key}.png`);
+        }
+      }
+    }
   }
 
   create(): void {
@@ -104,6 +122,10 @@ export class BootScene extends Phaser.Scene {
     }
     // Summon the Python spirits now (async) so the first battle is warm.
     TestRunner.warmUp();
-    this.scene.start('Overworld');
+    // Dev shortcut: open /#map to jump straight to the castle map (useful
+    // when hand-tuning nodePositions in castles.json).
+    this.scene.start(
+      window.location.hash === '#map' ? 'CastleMap' : 'Overworld',
+    );
   }
 }
