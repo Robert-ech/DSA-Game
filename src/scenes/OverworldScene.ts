@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { Player } from '../entities/Player';
 import { InputController } from '../systems/InputController';
 import { EVT_TOAST, GameEvents } from '../systems/events';
+import { MusicManager } from '../systems/MusicManager';
 
 const WORLD_WIDTH = 1280;
 const WORLD_HEIGHT = 960;
@@ -68,6 +69,12 @@ export class OverworldScene extends Phaser.Scene {
     cam.startFollow(this.player, true, 0.15, 0.15);
 
     this.scene.launch('HUD');
+
+    // Loops for as long as the player is anywhere in this "session" (it
+    // rides along through the Training Hut/Shop/Castle Select too, since
+    // those don't manage music themselves) — only a battle interrupts it.
+    MusicManager.playOverworld(this);
+    this.events.on(Phaser.Scenes.Events.WAKE, () => MusicManager.playOverworld(this));
 
     // Event-driven so a quick tap can't slip between polled frames.
     this.input.keyboard!.on('keydown-ESC', (e: KeyboardEvent) => {

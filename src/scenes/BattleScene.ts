@@ -7,6 +7,7 @@ import {
 import { getProblems, type Problem } from '../data/problems';
 import { EVT_TOAST, GameEvents } from '../systems/events';
 import { SaveManager } from '../systems/SaveManager';
+import { MusicManager } from '../systems/MusicManager';
 import { EVT_PYODIDE_READY, TestRunner } from '../systems/TestRunner';
 import { ensureTintedTexture } from '../systems/Tints';
 import { BattleOverlay } from '../ui/BattleOverlay';
@@ -68,6 +69,11 @@ export class BattleScene extends Phaser.Scene {
     this.spawnFighters();
     this.drawHpBar();
 
+    // Regular dragons (nodes 1-9) loop a single ominous roar; the castle
+    // boss (node 10) gets a one-shot roar sting that chains into the boss
+    // battle loop once it finishes.
+    MusicManager.playBattle(this, this.isBoss);
+
     // below the HUD panel (top-left) so the two never overlap
     this.add
       .text(20, 112, `${this.castle.name} — Node ${this.nodeIndex + 1}${this.isBoss ? ' (BOSS)' : ''}`, {
@@ -123,6 +129,9 @@ export class BattleScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.overlay?.destroy();
       this.overlay = undefined;
+      // Covers every exit path (flee, node victory, boss victory, boss
+      // timeout) so the next screen never overlaps fight audio.
+      MusicManager.stopAll(this);
     });
 
     this.scene.bringToTop('HUD');

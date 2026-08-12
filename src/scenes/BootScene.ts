@@ -46,6 +46,13 @@ const IMAGE_MANIFEST: Record<string, string> = {
  */
 const SKIP_PLACEHOLDER = new Set(['castle_map']);
 
+const AUDIO_MANIFEST: Record<string, string> = {
+  idle_music: 'assets/audio/idle_music.mp3',
+  ominous_roar: 'assets/audio/ominous_roar.mp3',
+  large_dragon_roar: 'assets/audio/large_dragon_roar.mp3',
+  boss_battle: 'assets/audio/boss_battle.mp3',
+};
+
 export class BootScene extends Phaser.Scene {
   private failedKeys = new Set<string>();
 
@@ -92,6 +99,9 @@ export class BootScene extends Phaser.Scene {
     for (const [key, path] of Object.entries(IMAGE_MANIFEST)) {
       this.load.image(key, path);
     }
+    for (const [key, path] of Object.entries(AUDIO_MANIFEST)) {
+      this.load.audio(key, path);
+    }
 
     // Skin frames are data-driven off skins.json: attempt all four direction
     // frames (plus sword variants) per prefix. Missing files simply fail to
@@ -118,6 +128,13 @@ export class BootScene extends Phaser.Scene {
           `[Assets] "${key}" (${IMAGE_MANIFEST[key]}) failed to load — using a generated placeholder.`,
         );
         if (!SKIP_PLACEHOLDER.has(key)) makePlaceholderTexture(this, key);
+      }
+    }
+    for (const key of Object.keys(AUDIO_MANIFEST)) {
+      if (this.failedKeys.has(key) || !this.cache.audio.exists(key)) {
+        console.warn(
+          `[Assets] "${key}" (${AUDIO_MANIFEST[key]}) failed to load — that track will simply stay silent.`,
+        );
       }
     }
     // Summon the Python spirits now (async) so the first battle is warm.
