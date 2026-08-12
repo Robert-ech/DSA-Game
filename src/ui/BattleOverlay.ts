@@ -270,6 +270,11 @@ export class BattleOverlay {
     }
   }
 
+  /** Collapse the panel so end-of-battle screens own the full canvas. */
+  hide(): void {
+    this.root.style.display = 'none';
+  }
+
   destroy(): void {
     this.destroyed = true;
     window.removeEventListener('resize', this.relayout);

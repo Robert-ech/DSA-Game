@@ -224,6 +224,8 @@ export class BattleScene extends Phaser.Scene {
 
   /** Boss victory cutscene: the themed Enchanted Sword rises with sparkles. */
   private playSwordCutscene(): void {
+    // the DOM editor overlay would cover the right half of the cutscene
+    this.overlay?.hide();
     const { width, height } = this.scale;
     const color = themeColorNumber(this.castle);
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75).setDepth(90);
@@ -292,6 +294,8 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private showEndPanel(title: string, subtitle: string, color: number): void {
+    // the DOM editor overlay would cover the right half of the panel
+    this.overlay?.hide();
     const { width, height } = this.scale;
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.6).setDepth(90);
     this.add
@@ -368,6 +372,7 @@ export class BattleScene extends Phaser.Scene {
     });
 
     this.time.delayedCall(1100, () => {
+      this.overlay?.hide(); // DEFEATED banner gets the full canvas
       const banner = this.add
         .text(this.scale.width / 2, this.scale.height / 2 - 40, 'DEFEATED', {
           fontFamily: 'monospace',
