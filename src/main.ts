@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { CloudSave } from './systems/CloudSave';
 import { BattleScene } from './scenes/BattleScene';
 import { BootScene } from './scenes/BootScene';
 import { CastleMapScene } from './scenes/CastleMapScene';
@@ -20,6 +21,8 @@ const aspect = Phaser.Math.Clamp(
   3 / 2,
   2,
 );
+
+CloudSave.init();
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,

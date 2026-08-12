@@ -118,6 +118,12 @@ class SaveManagerImpl {
     return this.data.enchantedSwords.length > 0;
   }
 
+  /** Adopt a save wholesale (cloud sync); unknown fields fall back to defaults. */
+  replaceData(data: SaveData): void {
+    this.data = { ...structuredClone(DEFAULTS), ...data };
+    this.save();
+  }
+
   reset(): void {
     this.data = structuredClone(DEFAULTS);
     this.save();
