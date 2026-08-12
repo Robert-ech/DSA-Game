@@ -7,6 +7,7 @@ import { CastleSelectScene } from './scenes/CastleSelectScene';
 import { OverworldScene } from './scenes/OverworldScene';
 import { PauseScene } from './scenes/PauseScene';
 import { ShopScene } from './scenes/ShopScene';
+import { TitleScene } from './scenes/TitleScene';
 import { WizardTrainingScene } from './scenes/WizardTrainingScene';
 import { HUDScene } from './ui/HUDScene';
 
@@ -42,6 +43,7 @@ const game = new Phaser.Game({
   },
   scene: [
     BootScene,
+    TitleScene,
     OverworldScene,
     HUDScene,
     PauseScene,

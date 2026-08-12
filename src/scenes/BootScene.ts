@@ -124,8 +124,6 @@ export class BootScene extends Phaser.Scene {
     TestRunner.warmUp();
     // Dev shortcut: open /#map to jump straight to the castle map (useful
     // when hand-tuning nodePositions in castles.json).
-    this.scene.start(
-      window.location.hash === '#map' ? 'CastleMap' : 'Overworld',
-    );
+    this.scene.start(window.location.hash === '#map' ? 'CastleMap' : 'Title');
   }
 }

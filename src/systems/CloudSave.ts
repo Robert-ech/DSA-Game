@@ -70,6 +70,16 @@ class CloudSaveImpl {
     return error ? error.message : null;
   }
 
+  /** Redirects to GitHub; the session lands when the browser returns. */
+  async signInWithGitHub(): Promise<string | null> {
+    if (!this.client) return 'Cloud save is not configured.';
+    const { error } = await this.client.auth.signInWithOAuth({
+      provider: 'github',
+      options: { redirectTo: window.location.origin },
+    });
+    return error ? error.message : null;
+  }
+
   async signOut(): Promise<void> {
     await this.client?.auth.signOut();
   }
