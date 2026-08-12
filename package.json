@@ -9,10 +9,25 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/loader": "^1.7.0",
     "phaser": "^3.90.0"
   },
   "devDependencies": {
+    "monaco-editor": "^0.56.0",
     "typescript": "^5.6.0",
     "vite": "^7.0.0"
-  }
+  },
+  "description": "Data Structures and Algorithms Game",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Robert-ech/DSA-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Robert-ech/DSA-Game/issues"
+  },
+  "homepage": "https://github.com/Robert-ech/DSA-Game#readme"
 }

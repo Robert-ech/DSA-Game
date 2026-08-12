@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { makePlaceholderTexture } from '../systems/Placeholders';
+import { TestRunner } from '../systems/TestRunner';
 
 /**
  * Every provided asset, keyed by texture key. Files that don't exist yet
@@ -35,7 +36,14 @@ const IMAGE_MANIFEST: Record<string, string> = {
   castle_master_purple: 'assets/buildings/castle_master_purple.png',
   // backgrounds
   grass_area: 'assets/backgrounds/grass_area.png',
+  castle_map: 'assets/backgrounds/castle_map_png.png',
 };
+
+/**
+ * Keys whose consumers draw their own full-scene fallback when the file is
+ * missing — a checkerboard placeholder would be worse than nothing here.
+ */
+const SKIP_PLACEHOLDER = new Set(['castle_map']);
 
 export class BootScene extends Phaser.Scene {
   private failedKeys = new Set<string>();
@@ -91,9 +99,11 @@ export class BootScene extends Phaser.Scene {
         console.warn(
           `[Assets] "${key}" (${IMAGE_MANIFEST[key]}) failed to load — using a generated placeholder.`,
         );
-        makePlaceholderTexture(this, key);
+        if (!SKIP_PLACEHOLDER.has(key)) makePlaceholderTexture(this, key);
       }
     }
+    // Summon the Python spirits now (async) so the first battle is warm.
+    TestRunner.warmUp();
     this.scene.start('Overworld');
   }
 }

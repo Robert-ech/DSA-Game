@@ -83,8 +83,31 @@ export class WizardTrainingScene extends Phaser.Scene {
       })
       .setOrigin(1, 1);
 
-    this.input.keyboard!.on('keydown-E', () => this.advance());
-    this.input.keyboard!.on('keydown-ESC', () => this.leave());
+    this.input.keyboard!.on('keydown-E', (e: KeyboardEvent) => {
+      if (!e.repeat) this.advance();
+    });
+    // Holding Esc auto-repeats keydown: without the guard the repeat lands in
+    // the Overworld right after the switch and pops the pause menu.
+    this.input.keyboard!.on('keydown-ESC', (e: KeyboardEvent) => {
+      if (!e.repeat) this.leave();
+    });
+
+    // Clickable exit so leaving never depends on Esc reaching the game
+    // (embedded browsers sometimes swallow the key).
+    const leaveBtn = this.add
+      .text(20, this.scale.height - 18, '< Leave Hut', {
+        fontFamily: 'monospace',
+        fontSize: '15px',
+        fontStyle: 'bold',
+        color: '#ffffff',
+        backgroundColor: '#2d2d3a',
+        padding: { x: 10, y: 5 },
+      })
+      .setOrigin(0, 1)
+      .setInteractive({ useHandCursor: true });
+    leaveBtn.on('pointerover', () => leaveBtn.setBackgroundColor('#44445a'));
+    leaveBtn.on('pointerout', () => leaveBtn.setBackgroundColor('#2d2d3a'));
+    leaveBtn.on('pointerdown', () => this.leave());
     this.events.on(Phaser.Scenes.Events.WAKE, () => {
       this.input.keyboard!.resetKeys();
       this.greet();

@@ -40,7 +40,9 @@ export class PauseScene extends Phaser.Scene {
       this.resumeGame();
     });
 
-    this.input.keyboard!.on('keydown-ESC', () => this.resumeGame());
+    this.input.keyboard!.on('keydown-ESC', (e: KeyboardEvent) => {
+      if (!e.repeat) this.resumeGame();
+    });
   }
 
   private makeButton(

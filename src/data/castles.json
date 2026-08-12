@@ -1,0 +1,106 @@
+{
+  "nodePositions": [
+    { "x": 48, "y": 554 },
+    { "x": 172, "y": 475 },
+    { "x": 344, "y": 475 },
+    { "x": 569, "y": 462 },
+    { "x": 461, "y": 362 },
+    { "x": 283, "y": 337 },
+    { "x": 172, "y": 200 },
+    { "x": 342, "y": 154 },
+    { "x": 515, "y": 233 },
+    { "x": 719, "y": 287 }
+  ],
+  "castles": [
+    {
+      "id": "arrays-hashing",
+      "name": "Cobblestone Keep",
+      "theme": "Classic Medieval",
+      "themeColor": "#c0392b"
+    },
+    {
+      "id": "two-pointers",
+      "name": "Raptor Jungle Bastion",
+      "theme": "Dino Jungle",
+      "themeColor": "#27ae60"
+    },
+    {
+      "id": "sliding-window",
+      "name": "Zorblax Outpost",
+      "theme": "Alien Planet",
+      "themeColor": "#d946ef"
+    },
+    {
+      "id": "stack",
+      "name": "Crimson Ranger Dojo",
+      "theme": "Ranger Dojo",
+      "themeColor": "#ff69b4"
+    },
+    {
+      "id": "binary-search",
+      "name": "Blackflag Cove",
+      "theme": "Pirate Cove",
+      "themeColor": "#b8860b"
+    },
+    {
+      "id": "linked-lists",
+      "name": "Frostspire Fortress",
+      "theme": "Ice Fortress",
+      "themeColor": "#5dade2"
+    },
+    {
+      "id": "trees",
+      "name": "Emberfall Keep",
+      "theme": "Volcano Keep",
+      "themeColor": "#e67e22"
+    },
+    {
+      "id": "tries",
+      "name": "Neon Grid Citadel",
+      "theme": "Cyber City",
+      "themeColor": "#1abc9c"
+    },
+    {
+      "id": "heaps",
+      "name": "Wraithwood Manor",
+      "theme": "Haunted Manor",
+      "themeColor": "#8e44ad"
+    },
+    {
+      "id": "backtracking",
+      "name": "Temple of Shifting Sands",
+      "theme": "Desert Temple",
+      "themeColor": "#d4a75f"
+    },
+    {
+      "id": "graphs",
+      "name": "Skyreach Citadel",
+      "theme": "Sky Citadel",
+      "themeColor": "#aed6f1"
+    },
+    {
+      "id": "dp-1d",
+      "name": "Abyssal Trench Palace",
+      "theme": "Ocean Depths",
+      "themeColor": "#2e5cb8"
+    },
+    {
+      "id": "dp-2d",
+      "name": "Gumdrop Stronghold",
+      "theme": "Candy Kingdom",
+      "themeColor": "#ff9ff3"
+    },
+    {
+      "id": "greedy",
+      "name": "Shogun's Rest",
+      "theme": "Samurai Village",
+      "themeColor": "#dc143c"
+    },
+    {
+      "id": "intervals",
+      "name": "The Obsidian Spire",
+      "theme": "Obsidian Spire",
+      "themeColor": "#7c4dbe"
+    }
+  ]
+}

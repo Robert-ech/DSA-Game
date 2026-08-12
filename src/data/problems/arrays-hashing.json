@@ -1,0 +1,200 @@
+[
+  {
+    "id": "arrays-01",
+    "category": "arrays-hashing",
+    "title": "Echo in the Vault",
+    "difficulty": "easy",
+    "statement": "The castle vault logs every coin's serial number in the order it was deposited. A cursed 'echo coin' is a serial number that appears more than once. Given a list of integers `nums`, return True if any value appears at least twice, and False if every value is distinct.\n\nConstraints:\n- 0 <= len(nums) <= 10^5\n- -10^9 <= nums[i] <= 10^9",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 2, 3, 1]", "output": "True" }],
+    "testCases": [
+      { "args": [[1, 2, 3, 1]], "expected": true },
+      { "args": [[1, 2, 3, 4]], "expected": false },
+      { "args": [[]], "expected": false },
+      { "args": [[7]], "expected": false },
+      { "args": [[5, 5, 5, 5]], "expected": true },
+      { "args": [[-1, 0, -1]], "expected": true }
+    ],
+    "hint": "A set remembers everything it has seen in O(1) per lookup. Walk the list once and ask the set before you add.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-02",
+    "category": "arrays-hashing",
+    "title": "Mirror Runes",
+    "difficulty": "easy",
+    "statement": "Two rune-words are 'mirror runes' if one can be formed by rearranging the letters of the other, using every letter exactly once. Given two lowercase strings `s` and `t`, return True if `t` is a mirror rune of `s`, else False.\n\nConstraints:\n- 0 <= len(s), len(t) <= 5 * 10^4\n- s and t consist of lowercase English letters",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str, t: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"listen\", t = \"silent\"", "output": "True" }],
+    "testCases": [
+      { "args": ["listen", "silent"], "expected": true },
+      { "args": ["rat", "car"], "expected": false },
+      { "args": ["a", "ab"], "expected": false },
+      { "args": ["", ""], "expected": true },
+      { "args": ["aabb", "abab"], "expected": true },
+      { "args": ["aacc", "ccac"], "expected": false }
+    ],
+    "hint": "Count each letter's occurrences in both words (a dict or collections.Counter) and compare the counts.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-03",
+    "category": "arrays-hashing",
+    "title": "The Treasure Pair",
+    "difficulty": "easy",
+    "statement": "The dragon's hoard is a row of chests, each holding `nums[i]` gold. Exactly one pair of chests together holds precisely `target` gold. Return the indices of that pair as a list `[i, j]` with `i < j`. You may not use the same chest twice.\n\nConstraints:\n- 2 <= len(nums) <= 10^4\n- Exactly one valid answer exists",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [2, 7, 11, 15], target = 9", "output": "[0, 1]" }],
+    "testCases": [
+      { "args": [[2, 7, 11, 15], 9], "expected": [0, 1] },
+      { "args": [[3, 2, 4], 6], "expected": [1, 2] },
+      { "args": [[3, 3], 6], "expected": [0, 1] },
+      { "args": [[1, 5, 9, 13], 22], "expected": [2, 3] },
+      { "args": [[0, 4, 3, 0], 0], "expected": [0, 3] },
+      { "args": [[-3, 4, 3, 90], 0], "expected": [0, 2] }
+    ],
+    "hint": "As you scan, store each value's index in a hash map. For each chest, check whether (target - value) is already in the map.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-04",
+    "category": "arrays-hashing",
+    "title": "The Lone Rune",
+    "difficulty": "easy",
+    "statement": "Every rune in the ruins was carved twice by the ancients — except one, carved only once. Given a list of integers `nums` where every element appears exactly twice except for one element that appears once, return the lone element.\n\nConstraints:\n- 1 <= len(nums) <= 3 * 10^4\n- Exactly one element appears once; all others appear exactly twice",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [4, 1, 2, 1, 2]", "output": "4" }],
+    "testCases": [
+      { "args": [[2, 2, 1]], "expected": 1 },
+      { "args": [[4, 1, 2, 1, 2]], "expected": 4 },
+      { "args": [[1]], "expected": 1 },
+      { "args": [[-1, -1, 7]], "expected": 7 },
+      { "args": [[10, 3, 10, 3, 99]], "expected": 99 }
+    ],
+    "hint": "A frequency dict works. For bonus style: XOR of the whole list cancels every pair and leaves the loner.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-05",
+    "category": "arrays-hashing",
+    "title": "Crowd Favorite",
+    "difficulty": "easy",
+    "statement": "The village votes for its favorite gladiator by number. Given a list of votes `nums`, return the number that appears most often. If several numbers tie for the most votes, return the smallest of them.\n\nConstraints:\n- 1 <= len(nums) <= 10^5\n- -10^6 <= nums[i] <= 10^6",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 2, 2, 3]", "output": "2" }],
+    "testCases": [
+      { "args": [[1, 2, 2, 3]], "expected": 2 },
+      { "args": [[5]], "expected": 5 },
+      { "args": [[3, 3, 1, 1]], "expected": 1 },
+      { "args": [[7, 7, 2, 2, 2]], "expected": 2 },
+      { "args": [[-5, -5, 0]], "expected": -5 },
+      { "args": [[9, 9, 9, 1, 1, 1, 2]], "expected": 1 }
+    ],
+    "hint": "Build a count dict, then pick the entry with the best (count, -value) — or compare (count, value) choosing higher count, then lower value.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-06",
+    "category": "arrays-hashing",
+    "title": "Top of the Hoard",
+    "difficulty": "easy",
+    "statement": "The dragon ranks its treasures by how many copies it owns. Given a list of integers `nums` and an integer `k`, return the `k` distinct values that occur most frequently. The answer may be returned in any order; it is guaranteed to be unique.\n\nConstraints:\n- 1 <= len(nums) <= 10^5\n- 1 <= k <= number of distinct values",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], k: int) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 1, 1, 2, 2, 3], k = 2", "output": "[1, 2]" }],
+    "testCases": [
+      { "args": [[1, 1, 1, 2, 2, 3], 2], "expected": [1, 2], "unordered": true },
+      { "args": [[1], 1], "expected": [1], "unordered": true },
+      { "args": [[4, 4, 4, 4], 1], "expected": [4], "unordered": true },
+      { "args": [[5, 5, 6, 6, 6, 7], 2], "expected": [6, 5], "unordered": true },
+      { "args": [[2, 2, 3, 3, 3, 1, 1, 1, 1], 3], "expected": [1, 3, 2], "unordered": true }
+    ],
+    "hint": "Count with a dict, then sort the distinct values by count descending and slice the first k (or use a heap of size k).",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-07",
+    "category": "arrays-hashing",
+    "title": "Alchemy of Products",
+    "difficulty": "easy",
+    "statement": "An alchemist brews one potion per ingredient: the potion's strength is the product of every OTHER ingredient's potency. Given a list of integers `nums`, return a list `answer` where `answer[i]` equals the product of all elements of `nums` except `nums[i]`. Division is forbidden by the alchemists' guild.\n\nConstraints:\n- 1 <= len(nums) <= 10^4\n- -30 <= nums[i] <= 30",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 2, 3, 4]", "output": "[24, 12, 8, 6]" }],
+    "testCases": [
+      { "args": [[1, 2, 3, 4]], "expected": [24, 12, 8, 6] },
+      { "args": [[0, 4]], "expected": [4, 0] },
+      { "args": [[2, 2]], "expected": [2, 2] },
+      { "args": [[1, 0, 3, 0]], "expected": [0, 0, 0, 0] },
+      { "args": [[-1, 1, -1]], "expected": [-1, 1, -1] },
+      { "args": [[5]], "expected": [1] }
+    ],
+    "hint": "Two sweeps: prefix products left-to-right, then multiply by suffix products right-to-left.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-08",
+    "category": "arrays-hashing",
+    "title": "The Vanished Page",
+    "difficulty": "easy",
+    "statement": "A spellbook's pages are numbered 0 through n, but one page has been torn out. Given a list `nums` containing n distinct numbers taken from the range [0, n], return the one number missing from the range.\n\nConstraints:\n- 1 <= n <= 10^4\n- All numbers in nums are distinct",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [3, 0, 1]", "output": "2" }],
+    "testCases": [
+      { "args": [[3, 0, 1]], "expected": 2 },
+      { "args": [[0, 1]], "expected": 2 },
+      { "args": [[1]], "expected": 0 },
+      { "args": [[0]], "expected": 1 },
+      { "args": [[9, 6, 4, 2, 3, 5, 7, 0, 1]], "expected": 8 },
+      { "args": [[0, 1, 2, 3, 4, 5, 6, 7, 8]], "expected": 9 }
+    ],
+    "hint": "The full range's sum is n*(n+1)//2. Subtract the actual sum — the difference is the vanished page.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-09",
+    "category": "arrays-hashing",
+    "title": "The Unbroken Chain",
+    "difficulty": "easy",
+    "statement": "A chain of enchanted links only holds power if the link numbers run consecutively. Given an unsorted list of integers `nums`, return the length of the longest run of consecutive values (order in the list does not matter). Your solution should aim for O(n) time.\n\nConstraints:\n- 0 <= len(nums) <= 10^5\n- -10^9 <= nums[i] <= 10^9",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [100, 4, 200, 1, 3, 2]", "output": "4" }],
+    "testCases": [
+      { "args": [[100, 4, 200, 1, 3, 2]], "expected": 4 },
+      { "args": [[]], "expected": 0 },
+      { "args": [[1, 2, 0, 1]], "expected": 3 },
+      { "args": [[5]], "expected": 1 },
+      { "args": [[9, 1, 4, 7, 3, 2, 8]], "expected": 4 },
+      { "args": [[0, -1]], "expected": 2 }
+    ],
+    "hint": "Put everything in a set. A number starts a chain only if (number - 1) is absent; then walk forward counting.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "arrays-10",
+    "category": "arrays-hashing",
+    "title": "The Hoard-Counter's Trial",
+    "difficulty": "easy-plus",
+    "statement": "BOSS TRIAL — The dragon demands a full audit. Given a list of integers `nums` (which may be negative) and an integer `k`, return the number of contiguous subarrays whose elements sum to exactly `k`.\n\nConstraints:\n- 1 <= len(nums) <= 2 * 10^4\n- -1000 <= nums[i] <= 1000\n- -10^7 <= k <= 10^7\n\nBeware: negatives mean sliding windows fail. The hoard rewards prefix wisdom.",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], k: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 1, 1], k = 2", "output": "2" }],
+    "testCases": [
+      { "args": [[1, 1, 1], 2], "expected": 2 },
+      { "args": [[1, 2, 3], 3], "expected": 2 },
+      { "args": [[1, -1, 0], 0], "expected": 3 },
+      { "args": [[3], 3], "expected": 1 },
+      { "args": [[1], 0], "expected": 0 },
+      { "args": [[4, -2, 2, 1, 1], 2], "expected": 4 }
+    ],
+    "hint": "Keep a running prefix sum and a dict counting how often each prefix value has appeared. Each step, add count[prefix - k] to the answer.",
+    "timeLimitMs": 5000
+  }
+]
