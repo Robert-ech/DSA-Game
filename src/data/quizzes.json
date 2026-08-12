@@ -1,0 +1,262 @@
+[
+  {
+    "id": "arr-01",
+    "category": "arrays-hashing",
+    "prompt": "You must check whether any value appears more than once in an unsorted list of a million numbers. Which approach fits best?",
+    "choices": [
+      "Compare every pair with nested loops",
+      "Hash Set membership check while scanning",
+      "Binary search each element",
+      "BFS over the values"
+    ],
+    "correctIndex": 1,
+    "explanation": "A hash set answers 'have I seen this?' in O(1), so one scan is O(n) time, O(n) space. Nested loops are O(n^2), and binary search needs sorted data."
+  },
+  {
+    "id": "arr-02",
+    "category": "arrays-hashing",
+    "prompt": "Given two words, decide whether one is an anagram of the other (same letters, rearranged).",
+    "choices": [
+      "Hash map of character counts",
+      "Two pointers from both ends",
+      "Stack of characters",
+      "Generate every permutation and compare"
+    ],
+    "correctIndex": 0,
+    "explanation": "Count each letter in one word, subtract with the other: O(n) time, O(1) space for a fixed alphabet. Permutations are factorial — hopeless past a few letters."
+  },
+  {
+    "id": "tp-01",
+    "category": "two-pointers",
+    "prompt": "Find two numbers in a SORTED array that add up to a target, using constant extra space.",
+    "choices": [
+      "Hash map of values already seen",
+      "Two pointers moving inward from both ends",
+      "Min-heap of candidate pairs",
+      "Depth-first search"
+    ],
+    "correctIndex": 1,
+    "explanation": "Because the array is sorted, a too-small sum means advance the left pointer, too-big means retreat the right: O(n) time, O(1) space. A hash map also works but costs O(n) space."
+  },
+  {
+    "id": "tp-02",
+    "category": "two-pointers",
+    "prompt": "Check whether a phrase reads the same forwards and backwards, ignoring spaces and punctuation.",
+    "choices": [
+      "Two pointers moving toward the middle",
+      "Hash set of the letters",
+      "Binary search for the middle character",
+      "A 2D dynamic programming table"
+    ],
+    "correctIndex": 0,
+    "explanation": "Walk one pointer from each end, skipping non-letters, comparing as you go: O(n) time, O(1) space — no reversed copy needed."
+  },
+  {
+    "id": "sw-01",
+    "category": "sliding-window",
+    "prompt": "Find the length of the longest substring that contains no repeated characters.",
+    "choices": [
+      "Sliding window with a set of characters inside it",
+      "Sort the characters first",
+      "Backtracking over every substring",
+      "Prefix sums"
+    ],
+    "correctIndex": 0,
+    "explanation": "Grow the window right; on a repeat, shrink from the left until it's gone. Each character enters and leaves at most once: O(n) time, O(k) space. Checking all substrings is O(n^2) or worse."
+  },
+  {
+    "id": "sw-02",
+    "category": "sliding-window",
+    "prompt": "Compute the maximum sum of any contiguous run of exactly k elements in an array.",
+    "choices": [
+      "Fixed-size sliding window: add the entering element, subtract the leaving one",
+      "Merge sort, then take the top k",
+      "Monotonic stack",
+      "Recompute each window's sum from scratch"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each slide updates the sum in O(1), so the whole pass is O(n) time, O(1) space. Recomputing every window costs O(n*k)."
+  },
+  {
+    "id": "st-01",
+    "category": "stack",
+    "prompt": "Verify that the brackets ( ) [ ] { } in a code file are balanced and properly nested.",
+    "choices": [
+      "Count opens minus closes",
+      "Push opens on a stack; each close must match the top",
+      "Two pointers from both ends",
+      "Sort the brackets"
+    ],
+    "correctIndex": 1,
+    "explanation": "A stack remembers the most recent unclosed bracket, catching bad nesting like ( [ ) ] that a simple counter misses: O(n) time, O(n) space."
+  },
+  {
+    "id": "st-02",
+    "category": "stack",
+    "prompt": "For each day's temperature, find how many days you must wait for a warmer one.",
+    "choices": [
+      "Monotonic decreasing stack of unresolved days",
+      "Hash map from temperature to day",
+      "Binary search from each day",
+      "Sliding window of one week"
+    ],
+    "correctIndex": 0,
+    "explanation": "Keep a stack of days still waiting; each new day pops every colder day and resolves it. Every index is pushed and popped once: O(n) time, O(n) space."
+  },
+  {
+    "id": "bs-01",
+    "category": "binary-search",
+    "prompt": "Find a target value in a sorted array that was rotated at some unknown pivot (like [4,5,6,1,2,3]).",
+    "choices": [
+      "Linear scan",
+      "Modified binary search: recurse into whichever half is sorted",
+      "Hash set of all values",
+      "Two pointers from both ends"
+    ],
+    "correctIndex": 1,
+    "explanation": "One half of any split is always properly sorted, so you can decide which half may hold the target: O(log n) time, O(1) space, versus O(n) for a scan."
+  },
+  {
+    "id": "ll-01",
+    "category": "linked-lists",
+    "prompt": "Detect whether a linked list loops back on itself, using O(1) memory.",
+    "choices": [
+      "Hash set of visited nodes",
+      "Fast and slow pointers (tortoise and hare)",
+      "Sort the nodes first",
+      "Count the nodes twice"
+    ],
+    "correctIndex": 1,
+    "explanation": "A pointer moving two steps laps a pointer moving one step if and only if there's a cycle: O(n) time, O(1) space. The hash set works but uses O(n) memory."
+  },
+  {
+    "id": "ll-02",
+    "category": "linked-lists",
+    "prompt": "Reverse a singly linked list in place.",
+    "choices": [
+      "Iterate with prev/curr pointers, flipping each next link",
+      "Copy values to an array, reverse it, rebuild the list",
+      "Priority queue ordered by position",
+      "Swap the first and last values repeatedly via full scans"
+    ],
+    "correctIndex": 0,
+    "explanation": "One walk flipping next pointers as you go: O(n) time, O(1) space. Copying to an array works but doubles the memory and misses the point of the structure."
+  },
+  {
+    "id": "tr-01",
+    "category": "trees",
+    "prompt": "Compute the maximum depth (longest root-to-leaf path) of a binary tree.",
+    "choices": [
+      "Recursive DFS: 1 + max(depth of children)",
+      "Sliding window over the nodes",
+      "Binary search on the depth",
+      "Topological sort"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each node's depth is one more than its deeper child — a natural recursion visiting every node once: O(n) time, O(h) space for the call stack."
+  },
+  {
+    "id": "tri-01",
+    "category": "tries",
+    "prompt": "Build an autocomplete: given a typed prefix, quickly return all stored words that start with it.",
+    "choices": [
+      "Trie (prefix tree), walk the prefix then collect the subtree",
+      "Hash map keyed by full word",
+      "Unsorted array with a linear scan per keystroke",
+      "Max-heap ordered by word length"
+    ],
+    "correctIndex": 0,
+    "explanation": "A trie shares prefixes structurally, so reaching all matches costs O(prefix length) plus output size. A hash map only answers exact-word lookups — it can't enumerate by prefix."
+  },
+  {
+    "id": "hp-01",
+    "category": "heaps",
+    "prompt": "Tasks with priorities stream in continuously; you must always process the highest-priority one next.",
+    "choices": [
+      "Max-heap (priority queue)",
+      "Re-sort the whole list after every arrival",
+      "Plain FIFO queue",
+      "Hash map from priority to task"
+    ],
+    "correctIndex": 0,
+    "explanation": "A heap inserts and extracts the max in O(log n) each. Re-sorting on every arrival costs O(n log n) per task, and a FIFO queue ignores priority entirely."
+  },
+  {
+    "id": "bt-01",
+    "category": "backtracking",
+    "prompt": "Generate every possible subset of a set of 10 distinct items.",
+    "choices": [
+      "Backtracking: at each item, branch on include vs. exclude",
+      "BFS over a grid",
+      "Binary search",
+      "Greedily pick the largest items first"
+    ],
+    "correctIndex": 0,
+    "explanation": "The include/exclude decision tree enumerates all 2^n subsets exactly once: O(2^n * n) time — unavoidable, since the output itself has 2^n entries."
+  },
+  {
+    "id": "gr-01",
+    "category": "graphs",
+    "prompt": "Find the shortest path between two rooms in a maze where every step costs the same.",
+    "choices": [
+      "Breadth-first search",
+      "Depth-first search",
+      "Greedily step toward the goal",
+      "In-order traversal"
+    ],
+    "correctIndex": 0,
+    "explanation": "BFS explores in rings of increasing distance, so the first time you reach the goal is via a shortest path: O(V+E) time. DFS finds *a* path, not the shortest one."
+  },
+  {
+    "id": "dp1-01",
+    "category": "dp-1d",
+    "prompt": "Count the distinct ways to climb n stairs when each move is 1 or 2 steps.",
+    "choices": [
+      "1D DP: ways(n) = ways(n-1) + ways(n-2)",
+      "Backtracking over every climbing sequence",
+      "Sliding window",
+      "Union-Find"
+    ],
+    "correctIndex": 0,
+    "explanation": "The last move came from step n-1 or n-2, giving a Fibonacci-style recurrence: O(n) time, O(1) space. Enumerating actual sequences is exponential."
+  },
+  {
+    "id": "dp2-01",
+    "category": "dp-2d",
+    "prompt": "Count the unique paths from the top-left to the bottom-right of a grid, moving only right or down.",
+    "choices": [
+      "2D DP table: paths(r,c) = paths(r-1,c) + paths(r,c-1)",
+      "BFS storing every partial path",
+      "Two pointers",
+      "A stack of visited cells"
+    ],
+    "correctIndex": 0,
+    "explanation": "Each cell is reachable only from above or from the left, so its count is the sum of those two: O(rows*cols) time. Storing every path explodes combinatorially."
+  },
+  {
+    "id": "gd-01",
+    "category": "greedy",
+    "prompt": "Each array index holds a max jump length. Decide whether you can reach the last index from the first.",
+    "choices": [
+      "Greedy: sweep once, tracking the furthest reachable index",
+      "DFS over every jump combination",
+      "Sort the jump lengths",
+      "2D DP over all index pairs"
+    ],
+    "correctIndex": 0,
+    "explanation": "If the furthest-reachable frontier ever falls behind your position, you're stuck; if it reaches the end, you win. One pass: O(n) time, O(1) space."
+  },
+  {
+    "id": "iv-01",
+    "category": "intervals",
+    "prompt": "Given a list of meeting time ranges, merge every set of overlapping meetings into one block.",
+    "choices": [
+      "Sort by start time, then sweep and merge neighbors",
+      "Hash map from start to end times",
+      "Compare every pair of meetings",
+      "A stack without any sorting"
+    ],
+    "correctIndex": 0,
+    "explanation": "Once sorted by start, an interval can only overlap the block being built — extend it or start a new one: O(n log n) for the sort, then a linear sweep."
+  }
+]

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { BootScene } from './scenes/BootScene';
 import { OverworldScene } from './scenes/OverworldScene';
 import { PauseScene } from './scenes/PauseScene';
+import { WizardTrainingScene } from './scenes/WizardTrainingScene';
 import { HUDScene } from './ui/HUDScene';
 
 const game = new Phaser.Game({
@@ -20,7 +21,7 @@ const game = new Phaser.Game({
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [BootScene, OverworldScene, HUDScene, PauseScene],
+  scene: [BootScene, OverworldScene, HUDScene, PauseScene, WizardTrainingScene],
 });
 
 // Debug/automation handle (used by the smoke test to probe scene state).
