@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import {
+  CASTLES,
   castleByCategory,
-  NODE_POSITIONS,
+  resolveMapTexture,
   themeColorNumber,
   type CastleDef,
 } from '../data/castleData';
@@ -25,22 +26,20 @@ export class CastleMapScene extends Phaser.Scene {
   private castle!: CastleDef;
   /** Node positions projected from image space onto the current canvas. */
   private nodeXY: { x: number; y: number }[] = [];
+  /** This castle's resolved map texture (themed art, or castle_map.png tinted); undefined = drawn fallback. */
+  private mapTexKey?: string;
 
   constructor() {
     super('CastleMap');
   }
 
   init(data: { castleId?: string }): void {
-    this.castle = castleByCategory(data.castleId ?? 'arrays-hashing') ?? {
-      id: 'arrays-hashing',
-      name: 'Cobblestone Keep',
-      theme: 'Classic Medieval',
-      themeColor: '#c0392b',
-    };
+    this.castle = castleByCategory(data.castleId ?? 'arrays-hashing') ?? CASTLES[0];
   }
 
   create(): void {
     const color = themeColorNumber(this.castle);
+    this.mapTexKey = resolveMapTexture(this, this.castle);
     this.projectNodes();
     this.drawBackground(color);
 
@@ -69,9 +68,9 @@ export class CastleMapScene extends Phaser.Scene {
     const currentIndex = progress.findIndex((done) => !done);
     const current = currentIndex === -1 ? (progress.length >= 10 ? -1 : progress.length) : currentIndex;
 
-    // The provided castle_map art already has the dragon perched on the
-    // castle; only the drawn fallback needs its own boss sprite.
-    if (!this.textures.exists('castle_map')) {
+    // Every real map (the original art, or a themed one) already draws its
+    // own boss/castle; only the fully-programmatic fallback needs one added.
+    if (!this.mapTexKey) {
       const bossPos = this.nodeXY[9];
       const bossKey =
         this.castle.id === 'arrays-hashing'
@@ -113,23 +112,24 @@ export class CastleMapScene extends Phaser.Scene {
   }
 
   /**
-   * NODE_POSITIONS live in castle_map image pixels so they can be tweaked
-   * against the art directly. Project them through the same cover-fit
-   * transform the background uses, so they track the pads at any canvas size.
+   * Each castle's nodePositions live in its own map image's pixel space so
+   * they can be tweaked against that art directly. Project them through the
+   * same cover-fit transform the background uses, so they track the pads at
+   * any canvas size.
    */
   private projectNodes(): void {
     const { width, height } = this.scale;
     let iw = MAP_IMAGE_W;
     let ih = MAP_IMAGE_H;
-    if (this.textures.exists('castle_map')) {
-      const src = this.textures.get('castle_map').getSourceImage();
+    if (this.mapTexKey) {
+      const src = this.textures.get(this.mapTexKey).getSourceImage();
       iw = src.width;
       ih = src.height;
     }
     const s = Math.max(width / iw, height / ih);
     const ox = (width - iw * s) / 2;
     const oy = (height - ih * s) / 2;
-    this.nodeXY = NODE_POSITIONS.map((p) => ({
+    this.nodeXY = this.castle.nodePositions.map((p) => ({
       x: ox + p.x * s,
       y: oy + p.y * s,
     }));
@@ -217,20 +217,14 @@ export class CastleMapScene extends Phaser.Scene {
   }
 
   /**
-   * castle_map.png hue-tinted per theme when it exists; otherwise a drawn
-   * 8-bit map: grass field, winding path through the node pads, castle at
-   * the end.
+   * This castle's own themed map art if one exists, drawn as-is; otherwise
+   * castle_map.png hue-tinted per theme; otherwise a fully drawn 8-bit map:
+   * grass field, winding path through the node pads, castle at the end.
    */
   private drawBackground(color: number): void {
     const { width, height } = this.scale;
-    if (this.textures.exists('castle_map')) {
-      // Castle 1 shows the original full-color art; other castles get the
-      // grayscale+theme recolor, matching the dragon-tinting rule.
-      const key =
-        this.castle.id === 'arrays-hashing'
-          ? 'castle_map'
-          : ensureTintedTexture(this, 'castle_map', color);
-      const img = this.add.image(width / 2, height / 2, key);
+    if (this.mapTexKey) {
+      const img = this.add.image(width / 2, height / 2, this.mapTexKey);
       img.setScale(Math.max(width / img.width, height / img.height));
       return;
     }

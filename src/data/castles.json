@@ -1,107 +1,280 @@
 {
-  "nodePositionsSpace": "castle_map image pixels (1376x768); the scene projects them onto the screen",
-  "nodePositions": [
-    { "x": 165, "y": 665 },
-    { "x": 318, "y": 570 },
-    { "x": 525, "y": 570 },
-    { "x": 795, "y": 555 },
-    { "x": 665, "y": 435 },
-    { "x": 452, "y": 405 },
-    { "x": 318, "y": 240 },
-    { "x": 522, "y": 185 },
-    { "x": 730, "y": 280 },
-    { "x": 975, "y": 345 }
-  ],
+  "nodePositionsSpace": "each castle's own map image, in that image's pixel space (1376x768 for every map so far); the scene projects them onto the screen. Hand-tune per castle after seeing its map rendered.",
   "castles": [
     {
       "id": "arrays-hashing",
       "name": "Cobblestone Keep",
       "theme": "Classic Medieval",
-      "themeColor": "#c0392b"
+      "themeColor": "#c0392b",
+      "mapKey": "castle_map",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "two-pointers",
       "name": "Raptor Jungle Bastion",
       "theme": "Dino Jungle",
-      "themeColor": "#27ae60"
+      "themeColor": "#27ae60",
+      "mapKey": "castle_map_dino",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "sliding-window",
       "name": "Zorblax Outpost",
       "theme": "Alien Planet",
-      "themeColor": "#d946ef"
+      "themeColor": "#d946ef",
+      "mapKey": "castle_map_alien",
+      "nodePositions": [
+        { "x": 150, "y": 690 },
+        { "x": 330, "y": 565 },
+        { "x": 445, "y": 555 },
+        { "x": 620, "y": 570 },
+        { "x": 785, "y": 555 },
+        { "x": 445, "y": 395 },
+        { "x": 650, "y": 400 },
+        { "x": 785, "y": 320 },
+        { "x": 960, "y": 335 },
+        { "x": 1160, "y": 220 }
+      ]
     },
     {
       "id": "stack",
       "name": "Crimson Ranger Dojo",
       "theme": "Ranger Dojo",
-      "themeColor": "#ff69b4"
+      "themeColor": "#ff69b4",
+      "mapKey": "castle_map_ranger",
+      "nodePositions": [
+        { "x": 330, "y": 610 },
+        { "x": 500, "y": 585 },
+        { "x": 620, "y": 555 },
+        { "x": 800, "y": 540 },
+        { "x": 655, "y": 400 },
+        { "x": 455, "y": 375 },
+        { "x": 330, "y": 235 },
+        { "x": 520, "y": 170 },
+        { "x": 800, "y": 300 },
+        { "x": 1040, "y": 245 }
+      ]
     },
     {
       "id": "binary-search",
       "name": "Blackflag Cove",
       "theme": "Pirate Cove",
-      "themeColor": "#b8860b"
+      "themeColor": "#b8860b",
+      "mapKey": "castle_map_water",
+      "nodePositions": [
+        { "x": 150, "y": 700 },
+        { "x": 330, "y": 650 },
+        { "x": 175, "y": 560 },
+        { "x": 335, "y": 420 },
+        { "x": 495, "y": 555 },
+        { "x": 655, "y": 565 },
+        { "x": 715, "y": 430 },
+        { "x": 715, "y": 275 },
+        { "x": 960, "y": 335 },
+        { "x": 1080, "y": 255 }
+      ]
     },
     {
       "id": "linked-lists",
       "name": "Frostspire Fortress",
       "theme": "Ice Fortress",
-      "themeColor": "#5dade2"
+      "themeColor": "#5dade2",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "trees",
       "name": "Emberfall Keep",
       "theme": "Volcano Keep",
-      "themeColor": "#e67e22"
+      "themeColor": "#e67e22",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "tries",
       "name": "Neon Grid Citadel",
       "theme": "Cyber City",
-      "themeColor": "#1abc9c"
+      "themeColor": "#1abc9c",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "heaps",
       "name": "Wraithwood Manor",
       "theme": "Haunted Manor",
-      "themeColor": "#8e44ad"
+      "themeColor": "#8e44ad",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "backtracking",
       "name": "Temple of Shifting Sands",
       "theme": "Desert Temple",
-      "themeColor": "#d4a75f"
+      "themeColor": "#d4a75f",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "graphs",
       "name": "Skyreach Citadel",
       "theme": "Sky Citadel",
-      "themeColor": "#aed6f1"
+      "themeColor": "#aed6f1",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "dp-1d",
       "name": "Abyssal Trench Palace",
       "theme": "Ocean Depths",
-      "themeColor": "#2e5cb8"
+      "themeColor": "#2e5cb8",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "dp-2d",
       "name": "Gumdrop Stronghold",
       "theme": "Candy Kingdom",
-      "themeColor": "#ff9ff3"
+      "themeColor": "#ff9ff3",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "greedy",
       "name": "Shogun's Rest",
       "theme": "Samurai Village",
-      "themeColor": "#dc143c"
+      "themeColor": "#dc143c",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     },
     {
       "id": "intervals",
       "name": "The Obsidian Spire",
       "theme": "Obsidian Spire",
-      "themeColor": "#7c4dbe"
+      "themeColor": "#7c4dbe",
+      "nodePositions": [
+        { "x": 165, "y": 665 },
+        { "x": 318, "y": 570 },
+        { "x": 525, "y": 570 },
+        { "x": 795, "y": 555 },
+        { "x": 665, "y": 435 },
+        { "x": 452, "y": 405 },
+        { "x": 318, "y": 240 },
+        { "x": 522, "y": 185 },
+        { "x": 730, "y": 280 },
+        { "x": 975, "y": 345 }
+      ]
     }
   ]
 }

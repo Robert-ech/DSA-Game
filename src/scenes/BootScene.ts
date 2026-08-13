@@ -38,13 +38,25 @@ const IMAGE_MANIFEST: Record<string, string> = {
   // backgrounds
   grass_area: 'assets/backgrounds/grass_area.png',
   castle_map: 'assets/backgrounds/castle_map_png.png',
+  // Per-castle themed maps (castles.json's mapKey points at these); castles
+  // without one yet fall back to castle_map hue-tinted to their theme color.
+  castle_map_dino: 'assets/backgrounds/castle_map_dino.png',
+  castle_map_alien: 'assets/backgrounds/castle_map_alien.png',
+  castle_map_ranger: 'assets/backgrounds/castle_map_ranger.png',
+  castle_map_water: 'assets/backgrounds/castle_map_water.jpg',
 };
 
 /**
  * Keys whose consumers draw their own full-scene fallback when the file is
  * missing — a checkerboard placeholder would be worse than nothing here.
  */
-const SKIP_PLACEHOLDER = new Set(['castle_map']);
+const SKIP_PLACEHOLDER = new Set([
+  'castle_map',
+  'castle_map_dino',
+  'castle_map_alien',
+  'castle_map_ranger',
+  'castle_map_water',
+]);
 
 const AUDIO_MANIFEST: Record<string, string> = {
   idle_music: 'assets/audio/idle_music.mp3',

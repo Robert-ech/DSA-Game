@@ -1,0 +1,194 @@
+[
+  {
+    "id": "two-pointers-01",
+    "category": "two-pointers",
+    "title": "The Vine Palindrome",
+    "difficulty": "easy",
+    "statement": "Ancient vine markings snake along the jungle trail. A marking is 'true' only if the sequence of letters and digits reads the same forwards and backwards once you ignore spaces, punctuation, and letter case. Given a string `s`, return True if it is such a palindrome.\n\nConstraints:\n- 0 <= len(s) <= 2 * 10^5\n- s consists of printable ASCII characters",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"A man, a plan, a canal: Panama\"", "output": "True" }],
+    "testCases": [
+      { "args": ["A man, a plan, a canal: Panama"], "expected": true },
+      { "args": ["race a car"], "expected": false },
+      { "args": [""], "expected": true },
+      { "args": ["0P"], "expected": false },
+      { "args": ["Was it a car or a cat I saw?"], "expected": true },
+      { "args": ["ab_a"], "expected": true }
+    ],
+    "hint": "Point one index at each end and walk inward, skipping any character that isn't a letter or digit; stop the moment two compared letters don't match.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-02",
+    "category": "two-pointers",
+    "title": "The Fossil Pair",
+    "difficulty": "easy",
+    "statement": "A row of fossil weights `nums` is already sorted in ascending order. Find the two (0-indexed) fossils whose weights sum to exactly `target`, and return their indices `[i, j]` with `i < j`. Exactly one such pair exists. Because the row is already sorted, solve it with two pointers in O(1) extra space instead of a hash map.\n\nConstraints:\n- 2 <= len(nums) <= 3 * 10^4\n- nums is sorted in non-decreasing order\n- Exactly one valid pair exists",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [2, 7, 11, 15], target = 9", "output": "[0, 1]" }],
+    "testCases": [
+      { "args": [[2, 7, 11, 15], 9], "expected": [0, 1] },
+      { "args": [[1, 2, 3, 4, 6], 6], "expected": [1, 3] },
+      { "args": [[2, 3, 4], 6], "expected": [0, 2] },
+      { "args": [[-3, -1, 0, 2, 4], 6], "expected": [3, 4] },
+      { "args": [[0, 0, 3, 4], 0], "expected": [0, 1] }
+    ],
+    "hint": "Start one pointer at each end. If the sum is too big, pull the right pointer in; if too small, push the left pointer out — sorted order guarantees this converges.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-03",
+    "category": "two-pointers",
+    "title": "Rune Reversal",
+    "difficulty": "easy",
+    "statement": "A weathered tablet holds a list of runic characters `chars`. Reverse their order using O(1) extra space (swap from both ends inward) and return the reversed list.\n\nConstraints:\n- 0 <= len(chars) <= 10^5",
+    "functionName": "solve",
+    "starterCode": "def solve(chars: list[str]) -> list[str]:\n    # your code here\n    pass",
+    "examples": [{ "input": "chars = [\"h\",\"e\",\"l\",\"l\",\"o\"]", "output": "[\"o\",\"l\",\"l\",\"e\",\"h\"]" }],
+    "testCases": [
+      { "args": [["h", "e", "l", "l", "o"]], "expected": ["o", "l", "l", "e", "h"] },
+      { "args": [["H", "a", "n", "n", "a", "h"]], "expected": ["h", "a", "n", "n", "a", "H"] },
+      { "args": [["a"]], "expected": ["a"] },
+      { "args": [["a", "b"]], "expected": ["b", "a"] },
+      { "args": [[]], "expected": [] }
+    ],
+    "hint": "Swap the characters at the left and right pointers, then step them toward each other until they meet or cross.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-04",
+    "category": "two-pointers",
+    "title": "Trail Compression",
+    "difficulty": "easy",
+    "statement": "A sorted trail log `nums` records footprint markers in ascending order, but the same marker was sometimes logged multiple times in a row. Return a new list with consecutive duplicates collapsed, preserving order.\n\nConstraints:\n- 0 <= len(nums) <= 3 * 10^4\n- nums is sorted in non-decreasing order",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 1, 2]", "output": "[1, 2]" }],
+    "testCases": [
+      { "args": [[1, 1, 2]], "expected": [1, 2] },
+      { "args": [[0, 0, 1, 1, 1, 2, 2, 3, 3, 4]], "expected": [0, 1, 2, 3, 4] },
+      { "args": [[]], "expected": [] },
+      { "args": [[1, 2, 3]], "expected": [1, 2, 3] },
+      { "args": [[1, 1, 1, 1]], "expected": [1] }
+    ],
+    "hint": "Keep a 'write' pointer for the last unique value kept so far; only copy a value forward when it differs from that one.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-05",
+    "category": "two-pointers",
+    "title": "Herding the Stragglers",
+    "difficulty": "easy",
+    "statement": "A row of herd positions `nums` uses 0 to mark an empty slot where a straggler wandered off, and any nonzero value for a present dinosaur. Rearrange the row so every straggler slot moves to the end, while the dinosaurs keep their original relative order. Return the rearranged list.\n\nConstraints:\n- 1 <= len(nums) <= 10^4",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [0, 1, 0, 3, 12]", "output": "[1, 3, 12, 0, 0]" }],
+    "testCases": [
+      { "args": [[0, 1, 0, 3, 12]], "expected": [1, 3, 12, 0, 0] },
+      { "args": [[0]], "expected": [0] },
+      { "args": [[1, 2, 3]], "expected": [1, 2, 3] },
+      { "args": [[0, 0, 1]], "expected": [1, 0, 0] },
+      { "args": [[4, 0, 5, 0, 0, 6]], "expected": [4, 5, 6, 0, 0, 0] }
+    ],
+    "hint": "One pointer scans for nonzero values; a second pointer marks where the next kept value should land. Fill the leftover slots with zeros at the end.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-06",
+    "category": "two-pointers",
+    "title": "Following the Trail",
+    "difficulty": "easy",
+    "statement": "A lone raptor's path `s` may or may not be hidden within the herd's full trail `t`, formed by deleting some of the herd's steps without reordering the rest. Return True if `s` is a subsequence of `t`.\n\nConstraints:\n- 0 <= len(s) <= 100\n- 0 <= len(t) <= 10^4",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str, t: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"abc\", t = \"ahbgdc\"", "output": "True" }],
+    "testCases": [
+      { "args": ["abc", "ahbgdc"], "expected": true },
+      { "args": ["axc", "ahbgdc"], "expected": false },
+      { "args": ["", "anything"], "expected": true },
+      { "args": ["b", ""], "expected": false },
+      { "args": ["ace", "abcde"], "expected": true },
+      { "args": ["aec", "abcde"], "expected": false }
+    ],
+    "hint": "Walk both strings with one pointer each. Advance the t-pointer every step, but only advance the s-pointer when the characters match.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-07",
+    "category": "two-pointers",
+    "title": "Merging the Herds",
+    "difficulty": "easy",
+    "statement": "Two herds' ages, `a` and `b`, are each already sorted ascending. Merge them into one combined sorted list.\n\nConstraints:\n- 0 <= len(a), len(b) <= 5000",
+    "functionName": "solve",
+    "starterCode": "def solve(a: list[int], b: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "a = [1, 2, 3], b = [2, 5, 6]", "output": "[1, 2, 2, 3, 5, 6]" }],
+    "testCases": [
+      { "args": [[1, 2, 3], [2, 5, 6]], "expected": [1, 2, 2, 3, 5, 6] },
+      { "args": [[], []], "expected": [] },
+      { "args": [[1], []], "expected": [1] },
+      { "args": [[], [1]], "expected": [1] },
+      { "args": [[4, 5, 6], [1, 2, 3]], "expected": [1, 2, 3, 4, 5, 6] }
+    ],
+    "hint": "Walk a pointer through each sorted herd, always appending whichever current age is smaller, then append whatever remains of the other herd.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-08",
+    "category": "two-pointers",
+    "title": "Sorting the Egg Clutch",
+    "difficulty": "easy",
+    "statement": "A nest holds eggs represented as 0 (red), 1 (green), or 2 (blue) in scrambled order. Rearrange them in place so all reds come first, then greens, then blues — in a single pass using three pointers (low / mid / high), without a full sort. Return the sorted list.\n\nConstraints:\n- 1 <= len(eggs) <= 300\n- eggs[i] is 0, 1, or 2",
+    "functionName": "solve",
+    "starterCode": "def solve(eggs: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "eggs = [2, 0, 2, 1, 1, 0]", "output": "[0, 0, 1, 1, 2, 2]" }],
+    "testCases": [
+      { "args": [[2, 0, 2, 1, 1, 0]], "expected": [0, 0, 1, 1, 2, 2] },
+      { "args": [[2, 0, 1]], "expected": [0, 1, 2] },
+      { "args": [[0]], "expected": [0] },
+      { "args": [[1]], "expected": [1] },
+      { "args": [[1, 2, 0, 0, 2, 1]], "expected": [0, 0, 1, 1, 2, 2] }
+    ],
+    "hint": "The Dutch national flag technique: 'low' marks the boundary before reds, 'high' marks the boundary after blues, and 'mid' scans between them, swapping and moving boundaries as it goes.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-09",
+    "category": "two-pointers",
+    "title": "The Widest Watering Hole",
+    "difficulty": "easy",
+    "statement": "A row of jungle trees has heights `heights[i]`. Any two trees, together with the ground between them, can form a watering hole holding a volume of `min(height of the two trees) * (distance between them)`. Find the maximum volume any two trees can hold.\n\nConstraints:\n- 2 <= len(heights) <= 10^5\n- 0 <= heights[i] <= 10^4",
+    "functionName": "solve",
+    "starterCode": "def solve(heights: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "heights = [1, 8, 6, 2, 5, 4, 8, 3, 7]", "output": "49" }],
+    "testCases": [
+      { "args": [[1, 8, 6, 2, 5, 4, 8, 3, 7]], "expected": 49 },
+      { "args": [[1, 1]], "expected": 1 },
+      { "args": [[4, 3, 2, 1, 4]], "expected": 16 },
+      { "args": [[1, 2, 1]], "expected": 2 },
+      { "args": [[2, 3, 4, 5, 18, 17, 6]], "expected": 17 }
+    ],
+    "hint": "Start pointers at both ends. The volume is capped by the shorter tree, so moving the taller tree's pointer inward can never help — always move the shorter side.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "two-pointers-10",
+    "category": "two-pointers",
+    "title": "The Zero-Sum Excavation",
+    "difficulty": "easy-plus",
+    "statement": "BOSS TRIAL — Deep in the dig site, three fossil weights (which may be negative) must be found that sum to exactly zero. Given a list `nums`, return every unique triplet of values `[a, b, c]` with `a + b + c == 0`. No duplicate triplets, and each triplet's three values must be listed in non-decreasing order.\n\nConstraints:\n- 3 <= len(nums) <= 3000\n- -10^5 <= nums[i] <= 10^5",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> list[list[int]]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [-1, 0, 1, 2, -1, -4]", "output": "[[-1, -1, 2], [-1, 0, 1]]" }],
+    "testCases": [
+      { "args": [[-1, 0, 1, 2, -1, -4]], "expected": [[-1, -1, 2], [-1, 0, 1]], "unordered": true },
+      { "args": [[0, 1, 1]], "expected": [], "unordered": true },
+      { "args": [[0, 0, 0]], "expected": [[0, 0, 0]], "unordered": true },
+      { "args": [[0, 0, 0, 0]], "expected": [[0, 0, 0]], "unordered": true },
+      { "args": [[-2, 0, 1, 1, 2]], "expected": [[-2, 0, 2], [-2, 1, 1]], "unordered": true }
+    ],
+    "hint": "Sort the array first. Fix one value, then two-pointer the rest of the array inward looking for the complement sum — skip over repeated values to avoid duplicate triplets.",
+    "timeLimitMs": 5000
+  }
+]

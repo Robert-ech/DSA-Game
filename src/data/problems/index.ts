@@ -1,4 +1,8 @@
 import arraysHashing from './arrays-hashing.json';
+import binarySearch from './binary-search.json';
+import slidingWindow from './sliding-window.json';
+import stack from './stack.json';
+import twoPointers from './two-pointers.json';
 
 export interface ProblemExample {
   input: string;
@@ -33,6 +37,10 @@ export interface Problem {
  */
 const PROBLEMS: Record<string, Problem[]> = {
   'arrays-hashing': arraysHashing as Problem[],
+  'two-pointers': twoPointers as Problem[],
+  'sliding-window': slidingWindow as Problem[],
+  stack: stack as Problem[],
+  'binary-search': binarySearch as Problem[],
 };
 
 export function getProblems(categoryId: string): Problem[] {

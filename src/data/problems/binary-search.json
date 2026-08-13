@@ -1,0 +1,196 @@
+[
+  {
+    "id": "binary-search-01",
+    "category": "binary-search",
+    "title": "Sounding the Seabed",
+    "difficulty": "easy",
+    "statement": "A sorted ascending chart of seabed depths `nums` may hold a treasure at depth `target`. Return its index, or -1 if it isn't in the chart. Your solution must run in O(log n).\n\nConstraints:\n- 0 <= len(nums) <= 10^4\n- nums is sorted in strictly ascending order",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [-1, 0, 3, 5, 9, 12], target = 9", "output": "4" }],
+    "testCases": [
+      { "args": [[-1, 0, 3, 5, 9, 12], 9], "expected": 4 },
+      { "args": [[-1, 0, 3, 5, 9, 12], 2], "expected": -1 },
+      { "args": [[5], 5], "expected": 0 },
+      { "args": [[5], -5], "expected": -1 },
+      { "args": [[], 1], "expected": -1 },
+      { "args": [[1, 3, 5, 7, 9, 11], 1], "expected": 0 }
+    ],
+    "hint": "Keep a low and high boundary. Check the midpoint; if it's too small move low past it, if too big move high before it, if it matches you're done.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-02",
+    "category": "binary-search",
+    "title": "Where to Bury the Chest",
+    "difficulty": "easy",
+    "statement": "A sorted ascending row of buried chests `nums` needs one more chest with value `target` added while keeping the row sorted. Return the index the new chest should be inserted at (if `target` already exists, return its index).\n\nConstraints:\n- 0 <= len(nums) <= 10^4\n- nums is sorted in strictly ascending order",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1, 3, 5, 6], target = 5", "output": "2" }],
+    "testCases": [
+      { "args": [[1, 3, 5, 6], 5], "expected": 2 },
+      { "args": [[1, 3, 5, 6], 2], "expected": 1 },
+      { "args": [[1, 3, 5, 6], 7], "expected": 4 },
+      { "args": [[1, 3, 5, 6], 0], "expected": 0 },
+      { "args": [[], 1], "expected": 0 },
+      { "args": [[1], 1], "expected": 0 }
+    ],
+    "hint": "Binary search for the leftmost position where nums[i] >= target — that position is correct whether or not target is already present.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-03",
+    "category": "binary-search",
+    "title": "The First Cursed Barrel",
+    "difficulty": "easy",
+    "statement": "A row of `n` barrels is checked in order. Once a barrel is found cursed, every barrel after it is cursed too. You're given the full curse report as a list `cursed` (True/False per barrel, guaranteed to be some False values followed by all True). Return the 1-indexed position of the first cursed barrel, or -1 if none are cursed.\n\nConstraints:\n- 1 <= len(cursed) <= 10^4\n- cursed is monotonic: some False entries followed by all True entries (possibly none of either)",
+    "functionName": "solve",
+    "starterCode": "def solve(cursed: list[bool]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "cursed = [False, False, True, True, True]", "output": "3" }],
+    "testCases": [
+      { "args": [[false, false, true, true, true]], "expected": 3 },
+      { "args": [[true]], "expected": 1 },
+      { "args": [[false]], "expected": -1 },
+      { "args": [[false, false, false, true]], "expected": 4 },
+      { "args": [[false, true]], "expected": 2 }
+    ],
+    "hint": "Binary search on the boolean value itself: if the midpoint is cursed, the answer is at or before it (search left half); otherwise search the right half.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-04",
+    "category": "binary-search",
+    "title": "Depth Charge Range",
+    "difficulty": "easy",
+    "statement": "Given a non-negative integer `x`, return `floor(sqrt(x))` — the greatest integer whose square does not exceed `x`. Do not use `**` or a built-in square-root function; binary search over the range of possible answers instead.\n\nConstraints:\n- 0 <= x <= 2^31 - 1",
+    "functionName": "solve",
+    "starterCode": "def solve(x: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "x = 8", "output": "2" }],
+    "testCases": [
+      { "args": [4], "expected": 2 },
+      { "args": [8], "expected": 2 },
+      { "args": [0], "expected": 0 },
+      { "args": [1], "expected": 1 },
+      { "args": [2147395600], "expected": 46340 },
+      { "args": [15], "expected": 3 }
+    ],
+    "hint": "Binary search candidate answers from 0 to x. A candidate m is valid if m*m <= x; find the largest valid candidate.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-05",
+    "category": "binary-search",
+    "title": "First and Last Cannon Mark",
+    "difficulty": "easy",
+    "statement": "A sorted ascending log of cannon-shot landing distances `nums` may contain the same distance multiple times. Given a `target` distance, return `[first_index, last_index]` spanning every occurrence of it, or `[-1, -1]` if it never occurs. Solve in O(log n).\n\nConstraints:\n- 0 <= len(nums) <= 10^5\n- nums is sorted in non-decreasing order",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [5, 7, 7, 8, 8, 10], target = 8", "output": "[3, 4]" }],
+    "testCases": [
+      { "args": [[5, 7, 7, 8, 8, 10], 8], "expected": [3, 4] },
+      { "args": [[5, 7, 7, 8, 8, 10], 6], "expected": [-1, -1] },
+      { "args": [[], 0], "expected": [-1, -1] },
+      { "args": [[1, 1, 1, 1], 1], "expected": [0, 3] },
+      { "args": [[2, 2], 2], "expected": [0, 1] }
+    ],
+    "hint": "Run two separate binary searches: one for the leftmost index where nums[i] >= target, one for the leftmost index where nums[i] > target (minus one gives the rightmost match).",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-06",
+    "category": "binary-search",
+    "title": "Charting the Grid Isles",
+    "difficulty": "easy",
+    "statement": "An island chart is an `m x n` grid `matrix` where each row is sorted ascending, and the first value of every row is greater than the last value of the row before it — meaning the whole grid reads as one long sorted sequence. Return True if `target` exists anywhere in it.\n\nConstraints:\n- 1 <= m, n <= 100\n- Rows are sorted ascending; each row's first value exceeds the previous row's last value",
+    "functionName": "solve",
+    "starterCode": "def solve(matrix: list[list[int]], target: int) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3", "output": "True" }],
+    "testCases": [
+      { "args": [[[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], 3], "expected": true },
+      { "args": [[[1, 3, 5, 7], [10, 11, 16, 20], [23, 30, 34, 60]], 13], "expected": false },
+      { "args": [[[1]], 1], "expected": true },
+      { "args": [[[1]], 2], "expected": false },
+      { "args": [[[1, 3]], 3], "expected": true }
+    ],
+    "hint": "Treat the grid as one virtual sorted array of length m*n; binary search it, converting a flat index back to (row, col) with divmod.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-07",
+    "category": "binary-search",
+    "title": "The Rotated Tide Chart",
+    "difficulty": "easy",
+    "statement": "A sorted ascending tide-level chart `nums` (all distinct values) was rotated at some unknown point. Find the minimum tide level in O(log n).\n\nConstraints:\n- 1 <= len(nums) <= 5000\n- All values in nums are distinct",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [3, 4, 5, 1, 2]", "output": "1" }],
+    "testCases": [
+      { "args": [[3, 4, 5, 1, 2]], "expected": 1 },
+      { "args": [[4, 5, 6, 7, 0, 1, 2]], "expected": 0 },
+      { "args": [[11, 13, 15, 17]], "expected": 11 },
+      { "args": [[2, 1]], "expected": 1 },
+      { "args": [[1]], "expected": 1 }
+    ],
+    "hint": "Compare the midpoint to the rightmost value: if the midpoint is greater, the minimum lies to its right; otherwise it's at or before the midpoint.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-08",
+    "category": "binary-search",
+    "title": "Locating the Sunken Chart",
+    "difficulty": "easy",
+    "statement": "A sorted ascending chart `nums` (all distinct values) was rotated at some unknown point. Given `target`, return its index, or -1 if it isn't present. Solve in O(log n).\n\nConstraints:\n- 1 <= len(nums) <= 5000\n- All values in nums are distinct",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], target: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [4, 5, 6, 7, 0, 1, 2], target = 0", "output": "4" }],
+    "testCases": [
+      { "args": [[4, 5, 6, 7, 0, 1, 2], 0], "expected": 4 },
+      { "args": [[4, 5, 6, 7, 0, 1, 2], 3], "expected": -1 },
+      { "args": [[1], 0], "expected": -1 },
+      { "args": [[1], 1], "expected": 0 },
+      { "args": [[5, 1, 3], 5], "expected": 0 },
+      { "args": [[3, 1], 1], "expected": 1 }
+    ],
+    "hint": "At each step, at least one half of the range (low to mid, or mid to high) is normally sorted. Figure out which half that is, then check whether target falls inside it to decide which way to go.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-09",
+    "category": "binary-search",
+    "title": "Reload Under Pressure",
+    "difficulty": "easy",
+    "statement": "The fleet has `h` hours before the rivals arrive, and `piles` of gunpowder to process (one pile at a time, in order). At a constant processing speed of `k` units per hour, a pile takes `ceil(pile / k)` hours, and any leftover time on that pile is wasted before moving to the next. Find the minimum integer speed `k` that clears every pile within `h` hours.\n\nConstraints:\n- 1 <= len(piles) <= 10^4\n- len(piles) <= h <= 10^9\n- 1 <= piles[i] <= 10^9",
+    "functionName": "solve",
+    "starterCode": "def solve(piles: list[int], h: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "piles = [3, 6, 7, 11], h = 8", "output": "4" }],
+    "testCases": [
+      { "args": [[3, 6, 7, 11], 8], "expected": 4 },
+      { "args": [[30, 11, 23, 4, 20], 5], "expected": 30 },
+      { "args": [[30, 11, 23, 4, 20], 6], "expected": 23 },
+      { "args": [[3, 6, 7, 11], 4], "expected": 11 },
+      { "args": [[1000000000], 2], "expected": 500000000 }
+    ],
+    "hint": "Binary search the speed k itself, from 1 to the largest pile. A speed is 'fast enough' if the total hours needed at that speed is <= h; find the smallest such speed.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "binary-search-10",
+    "category": "binary-search",
+    "title": "Loading the Last Galleon",
+    "difficulty": "easy-plus",
+    "statement": "BOSS TRIAL — A galleon must ship a row of cargo `weights` (loaded strictly in the given order, never reordered) within `days` days. Each day it loads consecutive packages up to its capacity (at least one package per day). Find the minimum ship capacity that gets everything shipped in time.\n\nConstraints:\n- 1 <= len(weights) <= 5 * 10^4\n- 1 <= days <= len(weights)\n- 1 <= weights[i] <= 500",
+    "functionName": "solve",
+    "starterCode": "def solve(weights: list[int], days: int) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "weights = [1,2,3,4,5,6,7,8,9,10], days = 5", "output": "15" }],
+    "testCases": [
+      { "args": [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5], "expected": 15 },
+      { "args": [[3, 2, 2, 4, 1, 4], 3], "expected": 6 },
+      { "args": [[1, 2, 3, 1, 1], 4], "expected": 3 },
+      { "args": [[1], 1], "expected": 1 },
+      { "args": [[5, 5, 5, 5], 4], "expected": 5 }
+    ],
+    "hint": "Binary search the capacity itself, from the heaviest single package to the sum of all packages. A capacity 'works' if greedily loading day by day never exceeds it in more than `days` days.",
+    "timeLimitMs": 5000
+  }
+]

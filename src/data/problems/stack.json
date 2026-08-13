@@ -1,0 +1,199 @@
+[
+  {
+    "id": "stack-01",
+    "category": "stack",
+    "title": "Balanced Training Scroll",
+    "difficulty": "easy",
+    "statement": "A dojo training scroll is written with the bracket characters `(`, `)`, `[`, `]`, `{`, `}`. Given a string `s` of just these characters, return True if every bracket is properly closed in the correct order.\n\nConstraints:\n- 0 <= len(s) <= 10^4\n- s consists only of the characters ()[]{}",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"()[]{}\"", "output": "True" }],
+    "testCases": [
+      { "args": ["()"], "expected": true },
+      { "args": ["()[]{}"], "expected": true },
+      { "args": ["(]"], "expected": false },
+      { "args": ["([)]"], "expected": false },
+      { "args": ["{[]}"], "expected": true },
+      { "args": [""], "expected": true }
+    ],
+    "hint": "Push every opening bracket onto a stack. On a closing bracket, it must match whatever is currently on top of the stack — pop it if so, otherwise the scroll is unbalanced.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-02",
+    "category": "stack",
+    "title": "Echoing Chant",
+    "difficulty": "easy",
+    "statement": "A ranger's chant `s` cancels itself: any two adjacent identical letters vanish, and this repeats until no adjacent pair remains. Return the final chant.\n\nConstraints:\n- 1 <= len(s) <= 10^5\n- s consists of lowercase English letters",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str) -> str:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"abbaca\"", "output": "\"ca\"" }],
+    "testCases": [
+      { "args": ["abbaca"], "expected": "ca" },
+      { "args": ["azxxzy"], "expected": "ay" },
+      { "args": ["aaaaaaaa"], "expected": "" },
+      { "args": ["abc"], "expected": "abc" },
+      { "args": ["aa"], "expected": "" }
+    ],
+    "hint": "Walk the string with a stack: if the top of the stack matches the current letter, pop it (they cancel); otherwise push the letter.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-03",
+    "category": "stack",
+    "title": "The Featherweight Pack",
+    "difficulty": "easy",
+    "statement": "A ranger's gear pack supports `push(x)`, `pop()`, `top()`, and `getMin()` (all must run in O(1) time). You're given a list of operations to simulate in order on a single pack, where each operation is `[\"push\", x]`, `[\"pop\"]`, `[\"top\"]`, or `[\"getMin\"]`. Return a list with one entry per operation: the returned value for `\"top\"`/`\"getMin\"`, and `None` for `\"push\"`/`\"pop\"`.\n\nConstraints:\n- 1 <= len(ops) <= 200\n- pop, top, and getMin are never called on an empty pack",
+    "functionName": "solve",
+    "starterCode": "def solve(ops: list[list]) -> list:\n    # your code here\n    pass",
+    "examples": [{ "input": "ops = [[\"push\",-2],[\"push\",0],[\"push\",-3],[\"getMin\"],[\"pop\"],[\"top\"],[\"getMin\"]]", "output": "[None, None, None, -3, None, 0, -2]" }],
+    "testCases": [
+      { "args": [[["push", -2], ["push", 0], ["push", -3], ["getMin"], ["pop"], ["top"], ["getMin"]]], "expected": [null, null, null, -3, null, 0, -2] },
+      { "args": [[["push", 1], ["push", 2], ["getMin"], ["push", 0], ["getMin"], ["pop"], ["getMin"]]], "expected": [null, null, 1, null, 0, null, 1] },
+      { "args": [[["push", 5], ["top"], ["getMin"]]], "expected": [null, 5, 5] },
+      { "args": [[["push", 3], ["push", 1], ["pop"], ["top"]]], "expected": [null, null, null, 3] }
+    ],
+    "hint": "Keep a normal stack, plus a second 'running minimum' stack that pushes the smaller of (new value, its own current top) alongside every push, and pops in lockstep — its top is always the min of what's currently in the main stack.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-04",
+    "category": "stack",
+    "title": "Order Through the Gate",
+    "difficulty": "easy",
+    "statement": "The dojo master wants trainee orders relayed first-come-first-served (FIFO), but the gate only has two stacks to work with. Given operations `[\"push\", x]`, `[\"pop\"]`, `[\"peek\"]`, or `[\"empty\"]`, simulate a queue built from two stacks and return the result of each operation in order (`None` for `\"push\"`).\n\nConstraints:\n- 1 <= len(ops) <= 100\n- pop and peek are never called on an empty queue",
+    "functionName": "solve",
+    "starterCode": "def solve(ops: list[list]) -> list:\n    # your code here\n    pass",
+    "examples": [{ "input": "ops = [[\"push\",1],[\"push\",2],[\"peek\"],[\"pop\"],[\"empty\"]]", "output": "[None, None, 1, 1, False]" }],
+    "testCases": [
+      { "args": [[["push", 1], ["push", 2], ["peek"], ["pop"], ["empty"]]], "expected": [null, null, 1, 1, false] },
+      { "args": [[["push", 5], ["pop"], ["empty"]]], "expected": [null, 5, true] },
+      { "args": [[["push", 1], ["push", 2], ["push", 3], ["pop"], ["pop"], ["peek"]]], "expected": [null, null, null, 1, 2, 3] },
+      { "args": [[["empty"]]], "expected": [true] }
+    ],
+    "hint": "Push new orders onto an 'in' stack. When you need to pop or peek, if the 'out' stack is empty, dump the entire 'in' stack into it first — that reverses it back into FIFO order.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-05",
+    "category": "stack",
+    "title": "Decoding the Command Scroll",
+    "difficulty": "easy",
+    "statement": "A ranger battle command is written in postfix (Reverse Polish) notation: a list of tokens where each token is either an integer or one of `+ - * /`. Evaluate it and return the result. Division truncates toward zero.\n\nConstraints:\n- 1 <= len(tokens) <= 10^4\n- Each token is an integer or one of + - * /",
+    "functionName": "solve",
+    "starterCode": "def solve(tokens: list[str]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "tokens = [\"2\",\"1\",\"+\",\"3\",\"*\"]", "output": "9" }],
+    "testCases": [
+      { "args": [["2", "1", "+", "3", "*"]], "expected": 9 },
+      { "args": [["4", "13", "5", "/", "+"]], "expected": 6 },
+      { "args": [["3", "4", "+"]], "expected": 7 },
+      { "args": [["6", "2", "/"]], "expected": 3 },
+      { "args": [["7", "2", "-", "4", "*"]], "expected": 20 },
+      { "args": [["-4", "5", "*"]], "expected": -20 }
+    ],
+    "hint": "Push numbers onto a stack. On an operator, pop the top two values (second-popped is the left operand), apply the operator, and push the result back.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-06",
+    "category": "stack",
+    "title": "Awaiting a Stronger Rival",
+    "difficulty": "easy",
+    "statement": "A ranger records a rival's power level each day, `levels`. For every day, find how many days must pass until a strictly stronger rival appears; if none ever does, that day gets 0.\n\nConstraints:\n- 1 <= len(levels) <= 10^5\n- 0 <= levels[i] <= 100",
+    "functionName": "solve",
+    "starterCode": "def solve(levels: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "levels = [73, 74, 75, 71, 69, 72, 76, 73]", "output": "[1, 1, 4, 2, 1, 1, 0, 0]" }],
+    "testCases": [
+      { "args": [[73, 74, 75, 71, 69, 72, 76, 73]], "expected": [1, 1, 4, 2, 1, 1, 0, 0] },
+      { "args": [[30, 40, 50, 60]], "expected": [1, 1, 1, 0] },
+      { "args": [[30, 60, 90]], "expected": [1, 1, 0] },
+      { "args": [[90, 60, 30]], "expected": [0, 0, 0] },
+      { "args": [[50]], "expected": [0] }
+    ],
+    "hint": "Keep a stack of day-indices whose 'stronger rival' is still unresolved. Whenever today's level beats the level at the top index, that index's answer is (today - that index); pop and repeat.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-07",
+    "category": "stack",
+    "title": "Scouting the Next Rival",
+    "difficulty": "easy",
+    "statement": "You scout a sequence of rival power levels `nums2` (all distinct). For each value in a shorter watch-list `nums1` (every value in `nums1` also appears somewhere in `nums2`), find the next strictly greater level appearing to its right in `nums2`; use -1 if none exists.\n\nConstraints:\n- 1 <= len(nums1) <= len(nums2) <= 1000\n- All values in nums2 are distinct; every value in nums1 also appears in nums2",
+    "functionName": "solve",
+    "starterCode": "def solve(nums1: list[int], nums2: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums1 = [4, 1, 2], nums2 = [1, 3, 4, 2]", "output": "[-1, 3, -1]" }],
+    "testCases": [
+      { "args": [[4, 1, 2], [1, 3, 4, 2]], "expected": [-1, 3, -1] },
+      { "args": [[2, 4], [1, 2, 3, 4]], "expected": [3, -1] },
+      { "args": [[1], [1]], "expected": [-1] },
+      { "args": [[3, 1], [3, 4, 1]], "expected": [4, -1] }
+    ],
+    "hint": "Scan nums2 once with a stack of values still waiting for their next-greater. Whenever the current value beats the stack's top, that's its answer — pop and repeat, then push the current value.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-08",
+    "category": "stack",
+    "title": "Banner Formations",
+    "difficulty": "easy",
+    "statement": "Given `n` pairs of dojo banners, return every combination of well-formed (properly nested and balanced) parenthesis sequences that can be made using exactly `n` pairs.\n\nConstraints:\n- 1 <= n <= 8",
+    "functionName": "solve",
+    "starterCode": "def solve(n: int) -> list[str]:\n    # your code here\n    pass",
+    "examples": [{ "input": "n = 2", "output": "[\"(())\", \"()()\"]" }],
+    "testCases": [
+      { "args": [1], "expected": ["()"], "unordered": true },
+      { "args": [2], "expected": ["(())", "()()"], "unordered": true },
+      { "args": [3], "expected": ["((()))", "(()())", "(())()", "()(())", "()()()"], "unordered": true },
+      {
+        "args": [4],
+        "expected": [
+          "(((())))", "((()()))", "((())())", "((()))()", "(()(()))",
+          "(()()())", "(()())()", "(())(())", "(())()()", "()((()))",
+          "()(()())", "()(())()", "()()(())", "()()()()"
+        ],
+        "unordered": true
+      }
+    ],
+    "hint": "Build the sequence one character at a time with backtracking: you may add '(' whenever you've used fewer than n so far, and ')' only when it wouldn't outnumber the '(' already placed.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-09",
+    "category": "stack",
+    "title": "Clashing Projectiles",
+    "difficulty": "easy",
+    "statement": "A row of ranger energy blasts moves along a single line. A positive value moves right, a negative value moves left, and its absolute value is its size. When two blasts moving toward each other meet, the smaller is destroyed; if equal, both are destroyed. Blasts moving the same direction never meet. Return the sizes/directions remaining after all collisions resolve.\n\nConstraints:\n- 1 <= len(blasts) <= 10^4\n- Every value is a nonzero integer",
+    "functionName": "solve",
+    "starterCode": "def solve(blasts: list[int]) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "blasts = [5, 10, -5]", "output": "[5, 10]" }],
+    "testCases": [
+      { "args": [[5, 10, -5]], "expected": [5, 10] },
+      { "args": [[8, -8]], "expected": [] },
+      { "args": [[10, 2, -5]], "expected": [10] },
+      { "args": [[-2, -1, 1, 2]], "expected": [-2, -1, 1, 2] },
+      { "args": [[1, -1]], "expected": [] },
+      { "args": [[1, -2, -2, -2]], "expected": [-2, -2, -2] }
+    ],
+    "hint": "Process left to right with a stack of survivors moving right. A new leftward blast only fights the stack's top if that top is moving right; keep resolving collisions with the top until it's destroyed, the new blast is destroyed, or there's nothing left to fight.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "stack-10",
+    "category": "stack",
+    "title": "The Widest Training Mat",
+    "difficulty": "easy-plus",
+    "statement": "BOSS TRIAL — A row of stacked training pillars has heights `heights`. Find the area of the largest rectangle that can be formed from a contiguous run of pillars, where the rectangle's height is limited by the shortest pillar included.\n\nConstraints:\n- 1 <= len(heights) <= 10^5\n- 0 <= heights[i] <= 10^4",
+    "functionName": "solve",
+    "starterCode": "def solve(heights: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "heights = [2, 1, 5, 6, 2, 3]", "output": "10" }],
+    "testCases": [
+      { "args": [[2, 1, 5, 6, 2, 3]], "expected": 10 },
+      { "args": [[2, 4]], "expected": 4 },
+      { "args": [[1, 1]], "expected": 2 },
+      { "args": [[0, 9]], "expected": 9 },
+      { "args": [[6, 2, 5, 4, 5, 1, 6]], "expected": 12 }
+    ],
+    "hint": "Keep a stack of indices with increasing heights. When a shorter pillar appears, pop and finalize rectangles using each popped height as the limiting height, with width spanning back to the new stack top.",
+    "timeLimitMs": 5000
+  }
+]
