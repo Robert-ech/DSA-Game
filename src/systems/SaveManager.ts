@@ -104,6 +104,10 @@ class SaveManagerImpl {
       this.data.infinitySwords.push(color);
       if (this.data.infinitySwords.length >= INFINITY_SWORDS_FOR_MASTER) {
         this.data.masterTitle = true;
+        // "the Master Skin auto-unlocks" — no purchase needed once earned.
+        if (!this.data.ownedSkins.includes('master')) {
+          this.data.ownedSkins.push('master');
+        }
       }
       this.save();
     }

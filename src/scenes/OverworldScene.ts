@@ -3,6 +3,9 @@ import { Player } from '../entities/Player';
 import { InputController } from '../systems/InputController';
 import { EVT_TOAST, GameEvents } from '../systems/events';
 import { MusicManager } from '../systems/MusicManager';
+import { SaveManager } from '../systems/SaveManager';
+
+const SWORDS_FOR_MASTER_TOWER = 3;
 
 const WORLD_WIDTH = 1280;
 const WORLD_HEIGHT = 960;
@@ -26,7 +29,7 @@ const BUILDINGS: BuildingDef[] = [
   { key: 'training_hut', name: 'Training Hut', x: 210, baselineY: 540, height: 170, targetScene: 'WizardTraining' },
   { key: 'store_coins', name: 'Skin Shop', x: 620, baselineY: 850, height: 170, targetScene: 'Shop' },
   // far right, mid-height, looming just above the purple pond
-  { key: 'castle_master_purple', name: 'Master Tower', x: 1050, baselineY: 560, height: 420, comingIn: 'Phase 6' },
+  { key: 'castle_master_purple', name: 'Master Tower', x: 1050, baselineY: 560, height: 420, targetScene: 'MasterTower' },
 ];
 
 interface PlacedBuilding {
@@ -86,6 +89,16 @@ export class OverworldScene extends Phaser.Scene {
       if (e.repeat) return;
       const nearest = this.nearestAdjacentBuilding();
       if (!nearest) return;
+      if (nearest.def.targetScene === 'MasterTower') {
+        const swords = SaveManager.data.enchantedSwords.length;
+        if (swords < SWORDS_FOR_MASTER_TOWER) {
+          GameEvents.emit(
+            EVT_TOAST,
+            `The tower door is sealed — earn ${SWORDS_FOR_MASTER_TOWER} Enchanted Swords first (${swords}/${SWORDS_FOR_MASTER_TOWER}).`,
+          );
+          return;
+        }
+      }
       if (nearest.def.targetScene) {
         this.scene.switch(nearest.def.targetScene);
       } else {

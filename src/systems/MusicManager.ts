@@ -48,6 +48,13 @@ class MusicManagerImpl {
     });
   }
 
+  /** One-shot triumphant roar for the moment the enemy defeats the player. */
+  playDefeatRoar(scene: Phaser.Scene): void {
+    this.stopAll(scene);
+    this.track = 'boss-intro'; // reuses the same clip as the intro sting
+    this.current = this.safePlay(scene, KEY.bossIntro, false, 0.8);
+  }
+
   /** A missing/failed-to-load track must never break a scene transition. */
   private safePlay(
     scene: Phaser.Scene,

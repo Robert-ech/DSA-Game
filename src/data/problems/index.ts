@@ -1,5 +1,6 @@
 import arraysHashing from './arrays-hashing.json';
 import binarySearch from './binary-search.json';
+import master from './master.json';
 import slidingWindow from './sliding-window.json';
 import stack from './stack.json';
 import twoPointers from './two-pointers.json';
@@ -45,4 +46,11 @@ const PROBLEMS: Record<string, Problem[]> = {
 
 export function getProblems(categoryId: string): Problem[] {
   return PROBLEMS[categoryId] ?? [];
+}
+
+const MASTER_PROBLEMS = master as Problem[];
+
+/** Master Dungeon's pool of hard problems, drawn from in random order. */
+export function getMasterProblems(): Problem[] {
+  return MASTER_PROBLEMS;
 }

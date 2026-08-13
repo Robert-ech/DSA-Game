@@ -1,0 +1,192 @@
+[
+  {
+    "id": "master-01",
+    "category": "master",
+    "title": "The Flooded Crypt",
+    "difficulty": "hard",
+    "statement": "A collapsed crypt corridor has wall heights `heights[i]` along its length. After the flood, water pools between the walls, held back up to the height of the shorter of any two bounding walls. Compute the total volume of trapped water.\n\nConstraints:\n- 0 <= len(heights) <= 2 * 10^4\n- 0 <= heights[i] <= 10^5",
+    "functionName": "solve",
+    "starterCode": "def solve(heights: list[int]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "heights = [0,1,0,2,1,0,1,3,2,1,2,1]", "output": "6" }],
+    "testCases": [
+      { "args": [[0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]], "expected": 6 },
+      { "args": [[4, 2, 0, 3, 2, 5]], "expected": 9 },
+      { "args": [[]], "expected": 0 },
+      { "args": [[1, 1, 1, 1]], "expected": 0 },
+      { "args": [[5, 4, 1, 2]], "expected": 1 }
+    ],
+    "hint": "Two pointers from both ends, each tracking the max wall seen on its side so far. Always advance the side with the smaller max — that side's trapped water at each step is (its running max minus its height).",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-02",
+    "category": "master",
+    "title": "The Twin Vault Median",
+    "difficulty": "hard",
+    "statement": "Two sorted vault inventories, `a` and `b`, must be appraised together. Find the median value of their combined sorted contents. Aim for better than the obvious O((m+n) log(m+n)) full-merge-and-sort approach.\n\nConstraints:\n- 0 <= len(a), len(b) <= 1000, not both empty\n- Each array is sorted in non-decreasing order",
+    "functionName": "solve",
+    "starterCode": "def solve(a: list[int], b: list[int]) -> float:\n    # your code here\n    pass",
+    "examples": [{ "input": "a = [1, 3], b = [2]", "output": "2" }],
+    "testCases": [
+      { "args": [[1, 3], [2]], "expected": 2 },
+      { "args": [[1, 2], [3, 4]], "expected": 2.5 },
+      { "args": [[], [1]], "expected": 1 },
+      { "args": [[2], []], "expected": 2 },
+      { "args": [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]], "expected": 5.5 }
+    ],
+    "hint": "Binary search a partition point in the smaller array; the matching partition point in the larger array is then determined. You've found the median split when every left-side value is <= every right-side value.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-03",
+    "category": "master",
+    "title": "The Longest Ward",
+    "difficulty": "hard",
+    "statement": "A protective ward is inscribed as a string `s` of only `(` and `)` glyphs. Find the length of its longest contiguous substring that is validly balanced.\n\nConstraints:\n- 0 <= len(s) <= 3 * 10^4\n- s consists only of ( and )",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \")()())\"", "output": "4" }],
+    "testCases": [
+      { "args": ["(()"], "expected": 2 },
+      { "args": [")()())"], "expected": 4 },
+      { "args": [""], "expected": 0 },
+      { "args": ["()(()"], "expected": 2 },
+      { "args": ["()(())"], "expected": 6 }
+    ],
+    "hint": "Keep a stack of indices, seeded with -1 as a base marker. Push '(' indices; on ')' pop, and if the stack empties push the current index as a new base — otherwise the current length is (current index minus the new stack top).",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-04",
+    "category": "master",
+    "title": "Guarding the Eight Alcoves",
+    "difficulty": "hard",
+    "statement": "An `n x n` dungeon chamber needs a ward placed in each row such that no two wards share a column or diagonal (the classic n-queens puzzle). Return every valid arrangement, each as a list of `n` strings where `'Q'` marks a ward and `'.'` marks an empty alcove.\n\nConstraints:\n- 1 <= n <= 6",
+    "functionName": "solve",
+    "starterCode": "def solve(n: int) -> list[list[str]]:\n    # your code here\n    pass",
+    "examples": [{ "input": "n = 4", "output": "[[\".Q..\",\"...Q\",\"Q...\",\"..Q.\"], [\"..Q.\",\"Q...\",\"...Q\",\".Q..\"]]" }],
+    "testCases": [
+      { "args": [1], "expected": [["Q"]], "unordered": true },
+      { "args": [4], "expected": [[".Q..", "...Q", "Q...", "..Q."], ["..Q.", "Q...", "...Q", ".Q.."]], "unordered": true },
+      { "args": [2], "expected": [], "unordered": true },
+      { "args": [3], "expected": [], "unordered": true }
+    ],
+    "hint": "Backtrack row by row, tracking used columns and the two diagonal directions (row-col and row+col) as sets. Place a ward only where none of the three are already occupied.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-05",
+    "category": "master",
+    "title": "Rewriting the Cursed Scroll",
+    "difficulty": "hard",
+    "statement": "A cursed scroll reads `word1`, but the ritual requires it to read `word2`. Each step you may insert, delete, or replace a single character. Return the minimum number of steps needed.\n\nConstraints:\n- 0 <= len(word1), len(word2) <= 500\n- word1 and word2 consist of lowercase English letters",
+    "functionName": "solve",
+    "starterCode": "def solve(word1: str, word2: str) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "word1 = \"horse\", word2 = \"ros\"", "output": "3" }],
+    "testCases": [
+      { "args": ["horse", "ros"], "expected": 3 },
+      { "args": ["intention", "execution"], "expected": 5 },
+      { "args": ["", ""], "expected": 0 },
+      { "args": ["abc", "abc"], "expected": 0 },
+      { "args": ["a", ""], "expected": 1 }
+    ],
+    "hint": "Classic edit-distance DP: dp[i][j] is the cost to convert the first i letters of word1 into the first j letters of word2. Matching letters cost nothing; otherwise take 1 + the best of insert, delete, or replace.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-06",
+    "category": "master",
+    "title": "The Rising Rune Path",
+    "difficulty": "hard",
+    "statement": "A dungeon floor is a grid of rune energies `matrix`. From any cell you may step to an orthogonally adjacent cell only if its energy is strictly greater. Find the length (in cells) of the longest such increasing path anywhere in the grid.\n\nConstraints:\n- 1 <= rows, cols <= 200\n- 0 <= matrix[i][j] <= 2^31 - 1",
+    "functionName": "solve",
+    "starterCode": "def solve(matrix: list[list[int]]) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "matrix = [[9,9,4],[6,6,8],[2,1,1]]", "output": "4" }],
+    "testCases": [
+      { "args": [[[9, 9, 4], [6, 6, 8], [2, 1, 1]]], "expected": 4 },
+      { "args": [[[3, 4, 5], [3, 2, 6], [2, 2, 1]]], "expected": 4 },
+      { "args": [[[1]]], "expected": 1 },
+      { "args": [[[1, 2], [3, 4]]], "expected": 3 }
+    ],
+    "hint": "Depth-first search from each cell, memoizing the longest increasing path starting there so overlapping searches aren't repeated.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-07",
+    "category": "master",
+    "title": "The Watch-Tower Signal",
+    "difficulty": "hard",
+    "statement": "A watch-tower logs alarm intensities `nums`, one per moment. For every window of `k` consecutive moments as it slides from left to right, report the maximum intensity within that window.\n\nConstraints:\n- 1 <= k <= len(nums) <= 10^5",
+    "functionName": "solve",
+    "starterCode": "def solve(nums: list[int], k: int) -> list[int]:\n    # your code here\n    pass",
+    "examples": [{ "input": "nums = [1,3,-1,-3,5,3,6,7], k = 3", "output": "[3,3,5,5,6,7]" }],
+    "testCases": [
+      { "args": [[1, 3, -1, -3, 5, 3, 6, 7], 3], "expected": [3, 3, 5, 5, 6, 7] },
+      { "args": [[1], 1], "expected": [1] },
+      { "args": [[1, -1], 1], "expected": [1, -1] },
+      { "args": [[9, 11], 2], "expected": [11] },
+      { "args": [[4, -2], 2], "expected": [4] }
+    ],
+    "hint": "Maintain a deque of indices with strictly decreasing values. Pop smaller values off the back before pushing the new index; drop the front if it's fallen outside the window; the front is always the current window's max.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-08",
+    "category": "master",
+    "title": "The Shifting Sigil Match",
+    "difficulty": "hard",
+    "statement": "A sigil pattern `p` may contain literal characters, `?` (matches any single character), and `*` (matches any sequence, including an empty one). Return True if `p` matches the entirety of string `s`.\n\nConstraints:\n- 0 <= len(s), len(p) <= 2000\n- p consists of lowercase letters, '?', and '*'",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str, p: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"adceb\", p = \"*a*b\"", "output": "True" }],
+    "testCases": [
+      { "args": ["aa", "a"], "expected": false },
+      { "args": ["aa", "*"], "expected": true },
+      { "args": ["cb", "?a"], "expected": false },
+      { "args": ["adceb", "*a*b"], "expected": true },
+      { "args": ["acdcb", "a*c?b"], "expected": false },
+      { "args": ["", "*"], "expected": true }
+    ],
+    "hint": "DP over (s-index, p-index). A '*' can either match zero characters (advance the pattern) or one more character of s (advance s, keep the pattern in place) — you're free either way.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-09",
+    "category": "master",
+    "title": "The Arithmetic Ward",
+    "difficulty": "hard",
+    "statement": "An incantation `s` is a valid arithmetic expression using non-negative integers, `+`, `-`, parentheses, and spaces (no `*` or `/`). Evaluate it and return the result.\n\nConstraints:\n- 1 <= len(s) <= 3 * 10^5\n- s is a well-formed expression using digits, '+', '-', '(', ')', and spaces",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str) -> int:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"(1+(4+5+2)-3)+(6+8)\"", "output": "23" }],
+    "testCases": [
+      { "args": ["1 + 1"], "expected": 2 },
+      { "args": [" 2-1 + 2 "], "expected": 3 },
+      { "args": ["(1+(4+5+2)-3)+(6+8)"], "expected": 23 },
+      { "args": ["2-(5-6)"], "expected": 3 },
+      { "args": ["-(2+3)"], "expected": -5 }
+    ],
+    "hint": "Track a running result, the current number being built, and a sign. On '(' push the result-so-far and the current sign onto a stack and reset; on ')' fold the parenthesized result back in using what you pushed.",
+    "timeLimitMs": 5000
+  },
+  {
+    "id": "master-10",
+    "category": "master",
+    "title": "The Final Ward Gate",
+    "difficulty": "hard",
+    "statement": "THE DEEPEST TRIAL — The gate's ward pattern `p` supports `.` (matches any single character) and `*` (zero or more of the character immediately before it). Return True if `p` matches the entirety of string `s`.\n\nConstraints:\n- 1 <= len(s) <= 20\n- 1 <= len(p) <= 30\n- p consists of lowercase letters, '.', and '*', and every '*' is preceded by a valid character",
+    "functionName": "solve",
+    "starterCode": "def solve(s: str, p: str) -> bool:\n    # your code here\n    pass",
+    "examples": [{ "input": "s = \"aa\", p = \"a*\"", "output": "True" }],
+    "testCases": [
+      { "args": ["aa", "a"], "expected": false },
+      { "args": ["aa", "a*"], "expected": true },
+      { "args": ["ab", ".*"], "expected": true },
+      { "args": ["aab", "c*a*b"], "expected": true },
+      { "args": ["mississippi", "mis*is*p*."], "expected": false },
+      { "args": ["", "a*"], "expected": true }
+    ],
+    "hint": "DP over (s-index, p-index). When the next pattern character is followed by '*', you can skip that (char, *) pair entirely, or — if the current s character matches — consume one s character and stay on the same pattern position.",
+    "timeLimitMs": 5000
+  }
+]

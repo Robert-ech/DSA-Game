@@ -6,8 +6,11 @@ import type { RunOutcome } from '../systems/TestRunner';
 
 export interface BattleOverlayCallbacks {
   onRun: (code: string) => void;
-  onHint: () => void;
+  /** Omit to hide the Hint button entirely (Master Mode: no hints). */
+  onHint?: () => void;
   onLeave: () => void;
+  /** Fires once Monaco has mounted and the player can actually type/attack. */
+  onEditorReady?: () => void;
 }
 
 const STYLE_ID = 'dsaq-battle-style';
@@ -80,7 +83,7 @@ export class BattleOverlay {
   private editorEl!: HTMLDivElement;
   private resultsEl!: HTMLDivElement;
   private attackBtn!: HTMLButtonElement;
-  private hintBtn!: HTMLButtonElement;
+  private hintBtn?: HTMLButtonElement;
   private editor?: MonacoNS.editor.IStandaloneCodeEditor;
   private relayout = () => this.layout();
   private destroyed = false;
@@ -139,9 +142,13 @@ export class BattleOverlay {
     this.attackBtn = this.makeButton('attack', '⚔ ATTACK', () =>
       this.callbacks.onRun(this.getCode()),
     );
-    this.hintBtn = this.makeButton('hint', '💡 Hint (5)', () => this.callbacks.onHint());
+    // Master Mode omits onHint entirely — no button, no temptation.
+    if (this.callbacks.onHint) {
+      const onHint = this.callbacks.onHint;
+      this.hintBtn = this.makeButton('hint', '💡 Hint (5)', () => onHint());
+    }
     const leaveBtn = this.makeButton('leave', 'Flee', () => this.callbacks.onLeave());
-    buttons.append(this.attackBtn, this.hintBtn, leaveBtn);
+    buttons.append(this.attackBtn, ...(this.hintBtn ? [this.hintBtn] : []), leaveBtn);
 
     this.resultsEl = document.createElement('div');
     this.resultsEl.className = 'dsaq-results';
@@ -178,6 +185,7 @@ export class BattleOverlay {
       automaticLayout: true,
       padding: { top: 8 },
     });
+    this.callbacks.onEditorReady?.();
   }
 
   /** Pin the overlay to the right half of the (letterboxed) game canvas. */
@@ -218,13 +226,13 @@ export class BattleOverlay {
   setReadOnly(readOnly: boolean): void {
     this.editor?.updateOptions({ readOnly });
     this.attackBtn.disabled = readOnly;
-    this.hintBtn.disabled = readOnly;
+    if (this.hintBtn) this.hintBtn.disabled = readOnly;
   }
 
   showHint(text: string): void {
     this.hintEl.textContent = `Hint: ${text}`;
     this.hintEl.style.display = 'block';
-    this.hintBtn.disabled = true;
+    if (this.hintBtn) this.hintBtn.disabled = true;
   }
 
   showResults(outcome: RunOutcome): void {

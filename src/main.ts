@@ -4,6 +4,7 @@ import { BattleScene } from './scenes/BattleScene';
 import { BootScene } from './scenes/BootScene';
 import { CastleMapScene } from './scenes/CastleMapScene';
 import { CastleSelectScene } from './scenes/CastleSelectScene';
+import { MasterTowerScene } from './scenes/MasterTowerScene';
 import { OverworldScene } from './scenes/OverworldScene';
 import { PauseScene } from './scenes/PauseScene';
 import { ShopScene } from './scenes/ShopScene';
@@ -52,6 +53,7 @@ const game = new Phaser.Game({
     CastleMapScene,
     BattleScene,
     ShopScene,
+    MasterTowerScene,
   ],
 });
 

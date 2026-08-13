@@ -4,32 +4,57 @@ import {
   themeColorNumber,
   type CastleDef,
 } from '../data/castleData';
-import { getProblems, type Problem } from '../data/problems';
+import { getMasterProblems, getProblems, type Problem } from '../data/problems';
 import { EVT_TOAST, GameEvents } from '../systems/events';
-import { SaveManager } from '../systems/SaveManager';
 import { MusicManager } from '../systems/MusicManager';
+import { SaveManager } from '../systems/SaveManager';
 import { EVT_PYODIDE_READY, TestRunner } from '../systems/TestRunner';
 import { ensureTintedTexture } from '../systems/Tints';
 import { BattleOverlay } from '../ui/BattleOverlay';
 
 const NODE_COINS = 25;
 const BOSS_COINS = 100;
+const MASTER_COINS = 150;
 const HINT_COST = 5;
 const BOSS_TIME_MS = 10 * 60 * 1000;
+const MASTER_TIME_MS = 20 * 60 * 1000;
+/** The Master Tower's dark-violet theme; master fights aren't tied to a castle. */
+const MASTER_THEME_COLOR = 0x8b5cf6;
+
+const INFINITY_COLORS = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'] as const;
+const INFINITY_HEX: Record<string, number> = {
+  red: 0xff3b3b,
+  orange: 0xff9f43,
+  yellow: 0xffe066,
+  green: 0x4ade80,
+  blue: 0x4dabf7,
+  purple: 0xc084fc,
+};
+
+function formatClock(ms: number): string {
+  const totalSec = Math.ceil(ms / 1000);
+  const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
+  const ss = String(totalSec % 60).padStart(2, '0');
+  return `${mm}:${ss}`;
+}
 
 /**
- * One coding battle: left half is the 8-bit fight (player vs dragon with an
+ * One coding battle: left half is the 8-bit fight (player vs enemy with an
  * HP bar), right half is the Monaco overlay. Each newly passed hidden test
- * fires an attack and chips the dragon's HP; all tests green defeats it.
- * Node 10 is the boss: same fight plus a 10-minute countdown — expiry means
- * the dragon wins.
+ * fires an attack and chips the enemy's HP; all tests green defeats it.
+ *
+ * Three flavors, chosen by init() data: a regular castle node (nodes 1-9,
+ * small/medium dragon, no timer), a castle boss (node 10, 10-minute timer,
+ * awards an Enchanted Sword), or a Master Dungeon trial (shadow knight,
+ * 20-minute timer, no hints, awards a random Infinity Sword color).
  */
 export class BattleScene extends Phaser.Scene {
-  private castle!: CastleDef;
+  private castle?: CastleDef;
   private nodeIndex = 0;
+  private isMaster = false;
   private problem!: Problem;
 
-  private dragon!: Phaser.GameObjects.Image;
+  private enemySprite!: Phaser.GameObjects.Image;
   private playerSprite!: Phaser.GameObjects.Image;
   private hpBar!: Phaser.GameObjects.Graphics;
   private timerText?: Phaser.GameObjects.Text;
@@ -38,9 +63,17 @@ export class BattleScene extends Phaser.Scene {
   private maxPassed = 0;
   private finished = false;
   private hintShown = false;
-  private bossDeadline = 0;
+  private fightDeadline = 0;
+  /** Countdown is held until the player can actually act (editor + Pyodide ready). */
+  private timerStarted = false;
+  private editorReady = false;
+  private enemyNameDrawn = false;
+
   private get isBoss(): boolean {
-    return this.nodeIndex === 9;
+    return !this.isMaster && this.nodeIndex === 9;
+  }
+  private get isTimed(): boolean {
+    return this.isBoss || this.isMaster;
   }
   private get halfW(): number {
     return this.scale.width / 2;
@@ -50,14 +83,25 @@ export class BattleScene extends Phaser.Scene {
     super('Battle');
   }
 
-  init(data: { castleId?: string; nodeIndex?: number }): void {
-    this.castle = castleByCategory(data.castleId ?? 'arrays-hashing')!;
-    this.nodeIndex = data.nodeIndex ?? 0;
-    this.problem = getProblems(this.castle.id)[this.nodeIndex];
+  init(data: { castleId?: string; nodeIndex?: number; masterProblemId?: string }): void {
+    this.isMaster = !!data.masterProblemId;
+    if (this.isMaster) {
+      const pool = getMasterProblems();
+      this.problem =
+        pool.find((p) => p.id === data.masterProblemId) ?? pool[0];
+      this.castle = undefined;
+      this.nodeIndex = -1;
+    } else {
+      this.castle = castleByCategory(data.castleId ?? 'arrays-hashing')!;
+      this.nodeIndex = data.nodeIndex ?? 0;
+      this.problem = getProblems(this.castle.id)[this.nodeIndex];
+    }
     this.maxPassed = 0;
     this.finished = false;
     this.hintShown = false;
-    this.dragonNameDrawn = false; // fields survive scene.start(), reset here
+    this.timerStarted = false;
+    this.editorReady = false;
+    this.enemyNameDrawn = false; // fields survive scene.start(), reset here
   }
 
   create(): void {
@@ -69,14 +113,16 @@ export class BattleScene extends Phaser.Scene {
     this.spawnFighters();
     this.drawHpBar();
 
-    // Regular dragons (nodes 1-9) loop a single ominous roar; the castle
-    // boss (node 10) gets a one-shot roar sting that chains into the boss
-    // battle loop once it finishes.
-    MusicManager.playBattle(this, this.isBoss);
+    // Regular dragons loop a single ominous roar; boss and master fights get
+    // a one-shot roar sting that chains into the boss battle loop.
+    MusicManager.playBattle(this, this.isTimed);
 
     // below the HUD panel (top-left) so the two never overlap
+    const headerText = this.isMaster
+      ? `Master Dungeon — ${this.problem.title}`
+      : `${this.castle!.name} — Node ${this.nodeIndex + 1}${this.isBoss ? ' (BOSS)' : ''}`;
     this.add
-      .text(20, 112, `${this.castle.name} — Node ${this.nodeIndex + 1}${this.isBoss ? ' (BOSS)' : ''}`, {
+      .text(20, 112, headerText, {
         fontFamily: 'monospace',
         fontSize: '15px',
         fontStyle: 'bold',
@@ -86,10 +132,9 @@ export class BattleScene extends Phaser.Scene {
       })
       .setDepth(50);
 
-    if (this.isBoss) {
-      this.bossDeadline = this.time.now + BOSS_TIME_MS;
+    if (this.isTimed) {
       this.timerText = this.add
-        .text(this.halfW / 2, 74, '10:00', {
+        .text(this.halfW / 2, 74, formatClock(this.timeLimitMs()), {
           fontFamily: 'monospace',
           fontSize: '32px',
           fontStyle: 'bold',
@@ -103,8 +148,12 @@ export class BattleScene extends Phaser.Scene {
 
     this.overlay = new BattleOverlay(this, this.problem, {
       onRun: (code) => void this.runAttack(code),
-      onHint: () => this.buyHint(),
+      onHint: this.isMaster ? undefined : () => this.buyHint(),
       onLeave: () => this.leave(),
+      onEditorReady: () => {
+        this.editorReady = true;
+        this.tryStartTimer();
+      },
     });
     if (!TestRunner.isReady) {
       this.overlay.setAttackEnabled(false);
@@ -113,11 +162,16 @@ export class BattleScene extends Phaser.Scene {
       const onReady = () => {
         this.overlay?.setAttackEnabled(true);
         this.overlay?.setStatus('The spirits are ready. ATTACK when your code is!');
+        this.tryStartTimer();
       };
       GameEvents.once(EVT_PYODIDE_READY, onReady);
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () =>
         GameEvents.off(EVT_PYODIDE_READY, onReady),
       );
+    } else {
+      // Pyodide was already warm (the common case); the timer still waits
+      // on the editor via onEditorReady above.
+      this.tryStartTimer();
     }
 
     this.input.keyboard!.on('keydown-ESC', (e: KeyboardEvent) => {
@@ -129,8 +183,8 @@ export class BattleScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.overlay?.destroy();
       this.overlay = undefined;
-      // Covers every exit path (flee, node victory, boss victory, boss
-      // timeout) so the next screen never overlaps fight audio.
+      // Covers every exit path (flee, victory, timeout) so the next screen
+      // never overlaps fight audio.
       MusicManager.stopAll(this);
     });
 
@@ -138,18 +192,32 @@ export class BattleScene extends Phaser.Scene {
   }
 
   update(): void {
-    if (this.timerText && !this.finished) {
-      const left = Math.max(0, this.bossDeadline - this.time.now);
+    if (this.timerText && this.timerStarted && !this.finished) {
+      const left = Math.max(0, this.fightDeadline - this.time.now);
       const totalSec = Math.ceil(left / 1000);
-      const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
-      const ss = String(totalSec % 60).padStart(2, '0');
-      this.timerText.setText(`${mm}:${ss}`);
+      this.timerText.setText(formatClock(left));
       if (totalSec <= 60) {
         this.timerText.setColor('#ff4444');
         this.timerText.setScale(1 + 0.08 * Math.abs(Math.sin(this.time.now * 0.006)));
       }
-      if (left <= 0) this.bossTimeUp();
+      if (left <= 0) this.timeUp();
     }
+  }
+
+  private timeLimitMs(): number {
+    return this.isMaster ? MASTER_TIME_MS : BOSS_TIME_MS;
+  }
+
+  /** Countdown holds at the full time until the player can actually act. */
+  private tryStartTimer(): void {
+    if (!this.isTimed || this.timerStarted || this.finished) return;
+    if (!this.editorReady || !TestRunner.isReady) return;
+    this.timerStarted = true;
+    this.fightDeadline = this.time.now + this.timeLimitMs();
+  }
+
+  private themeColor(): number {
+    return this.isMaster ? MASTER_THEME_COLOR : themeColorNumber(this.castle!);
   }
 
   // ---------------------------------------------------------------- combat
@@ -187,12 +255,12 @@ export class BattleScene extends Phaser.Scene {
     });
     this.time.delayedCall(110, () => {
       if (this.finished) return;
-      this.dragon.setTintFill(0xffffff);
+      this.enemySprite.setTintFill(0xffffff);
       this.cameras.main.shake(90, 0.004);
-      this.time.delayedCall(90, () => this.dragon.clearTint());
+      this.time.delayedCall(90, () => this.enemySprite.clearTint());
       this.tweens.add({
-        targets: this.dragon,
-        x: this.dragon.x + 10,
+        targets: this.enemySprite,
+        x: this.enemySprite.x + 10,
         duration: 70,
         yoyo: true,
       });
@@ -204,19 +272,22 @@ export class BattleScene extends Phaser.Scene {
     this.finished = true;
     this.overlay?.setReadOnly(true);
 
-    const alreadyDone =
-      SaveManager.data.castleProgress[this.castle.id]?.[this.nodeIndex] === true;
-    SaveManager.markNodeComplete(this.castle.id, this.nodeIndex);
+    if (this.isMaster) {
+      this.playEnemyDefeatVisual();
+      this.time.delayedCall(900, () => this.playInfinitySwordCutscene());
+      return;
+    }
 
-    // defeated sprite for a beat, then the reward panel
-    this.dragon.setTexture(this.defeatedTextureKey());
-    this.dragon.setScale((this.isBoss ? 170 : this.nodeIndex >= 3 ? 150 : 120) / this.dragon.height);
-    this.tweens.add({ targets: this.dragon, alpha: 0.85, angle: 6, duration: 400 });
+    const castle = this.castle!;
+    const alreadyDone =
+      SaveManager.data.castleProgress[castle.id]?.[this.nodeIndex] === true;
+    SaveManager.markNodeComplete(castle.id, this.nodeIndex);
+    this.playEnemyDefeatVisual();
 
     if (this.isBoss) {
-      if (!alreadyDone || !SaveManager.data.enchantedSwords.includes(this.castle.id)) {
+      if (!alreadyDone || !SaveManager.data.enchantedSwords.includes(castle.id)) {
         SaveManager.addCoins(BOSS_COINS);
-        SaveManager.awardEnchantedSword(this.castle.id);
+        SaveManager.awardEnchantedSword(castle.id);
       }
       this.time.delayedCall(900, () => this.playSwordCutscene());
     } else {
@@ -231,12 +302,41 @@ export class BattleScene extends Phaser.Scene {
     }
   }
 
+  /**
+   * Dragons swap to a defeated texture (a beat of stillness); the shadow
+   * knight has no defeated frame yet, so it fades out with rising smoke.
+   */
+  private playEnemyDefeatVisual(): void {
+    if (this.isMaster) {
+      this.tweens.add({ targets: this.enemySprite, alpha: 0, duration: 900, ease: 'Cubic.easeIn' });
+      const smoke = this.add.particles(this.enemySprite.x, this.enemySprite.y, '__WHITE', {
+        speed: { min: 10, max: 40 },
+        angle: { min: 250, max: 290 },
+        scale: { start: 2, end: 0 },
+        alpha: { start: 0.5, end: 0 },
+        lifespan: 1200,
+        quantity: 1,
+        frequency: 60,
+        tint: 0x6b5b95,
+      });
+      smoke.setDepth(41);
+      this.time.delayedCall(900, () => smoke.stop());
+      return;
+    }
+    this.enemySprite.setTexture(this.defeatedTextureKey());
+    this.enemySprite.setScale(
+      (this.isBoss ? 170 : this.nodeIndex >= 3 ? 150 : 120) / this.enemySprite.height,
+    );
+    this.tweens.add({ targets: this.enemySprite, alpha: 0.85, angle: 6, duration: 400 });
+  }
+
   /** Boss victory cutscene: the themed Enchanted Sword rises with sparkles. */
   private playSwordCutscene(): void {
     // the DOM editor overlay would cover the right half of the cutscene
     this.overlay?.hide();
     const { width, height } = this.scale;
-    const color = themeColorNumber(this.castle);
+    const castle = this.castle!;
+    const color = this.themeColor();
     this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.75).setDepth(90);
 
     const swordKey = ensureTintedTexture(this, 'blue_glowing_sword', color);
@@ -287,7 +387,7 @@ export class BattleScene extends Phaser.Scene {
       .text(
         width / 2,
         height / 2 - 130,
-        `The ${this.castle.theme} blade is yours. +${BOSS_COINS} gold — the next castle awaits!`,
+        `The ${castle.theme} blade is yours. +${BOSS_COINS} gold — the next castle awaits!`,
         {
           fontFamily: 'monospace',
           fontSize: '15px',
@@ -300,6 +400,139 @@ export class BattleScene extends Phaser.Scene {
       .setDepth(92);
 
     this.addContinueButton(height / 2 + 170);
+  }
+
+  /** Master victory: a random Infinity Sword color rises; the 5th triggers the full celebration. */
+  private playInfinitySwordCutscene(): void {
+    this.overlay?.hide();
+    const { width, height } = this.scale;
+
+    const uncollected = INFINITY_COLORS.filter(
+      (c) => !SaveManager.data.infinitySwords.includes(c),
+    );
+    const pool = uncollected.length > 0 ? uncollected : [...INFINITY_COLORS];
+    const color = pool[Math.floor(Math.random() * pool.length)];
+    const wasMaster = SaveManager.data.masterTitle;
+    SaveManager.addCoins(MASTER_COINS);
+    SaveManager.awardInfinitySword(color);
+    const justBecameMaster = !wasMaster && SaveManager.data.masterTitle;
+
+    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.8).setDepth(90);
+
+    const swordKey = ensureTintedTexture(this, 'blue_glowing_sword', INFINITY_HEX[color]);
+    const sword = this.add
+      .image(width / 2, height / 2 + 180, swordKey)
+      .setDepth(92)
+      .setAlpha(0);
+    sword.setScale(200 / sword.height);
+    this.tweens.add({
+      targets: sword,
+      y: height / 2 - 20,
+      alpha: 1,
+      duration: 1200,
+      ease: 'Cubic.easeOut',
+    });
+    this.tweens.add({
+      targets: sword,
+      angle: { from: -4, to: 4 },
+      duration: 900,
+      delay: 1200,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+    });
+
+    const sparkles = this.add.particles(width / 2, height / 2 - 20, '__WHITE', {
+      speed: { min: 30, max: 120 },
+      scale: { start: 3, end: 0 },
+      alpha: { start: 1, end: 0 },
+      lifespan: 900,
+      quantity: 2,
+      tint: [INFINITY_HEX[color], 0xffffff],
+    });
+    sparkles.setDepth(91);
+
+    this.add
+      .text(width / 2, height / 2 - 170, 'INFINITY SWORD EARNED!', {
+        fontFamily: 'monospace',
+        fontSize: '30px',
+        fontStyle: 'bold',
+        color: '#ffd700',
+        stroke: '#000000',
+        strokeThickness: 6,
+      })
+      .setOrigin(0.5)
+      .setDepth(92);
+    this.add
+      .text(
+        width / 2,
+        height / 2 - 130,
+        `The ${color} infinity blade is yours. ${SaveManager.data.infinitySwords.length}/5 collected. +${MASTER_COINS} gold!`,
+        {
+          fontFamily: 'monospace',
+          fontSize: '15px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 3,
+        },
+      )
+      .setOrigin(0.5)
+      .setDepth(92);
+
+    if (justBecameMaster) {
+      this.time.delayedCall(1300, () => this.playMasterCelebration());
+    } else {
+      this.addContinueButton(height / 2 + 170);
+    }
+  }
+
+  /** The full-screen "you did it" celebration on collecting the 5th Infinity Sword. */
+  private playMasterCelebration(): void {
+    const { width, height } = this.scale;
+    this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.92).setDepth(100);
+
+    const title = this.add
+      .text(width / 2, height / 2 - 40, 'YOU ARE THE MASTER', {
+        fontFamily: 'monospace',
+        fontSize: '44px',
+        fontStyle: 'bold',
+        color: '#ffd700',
+        stroke: '#000000',
+        strokeThickness: 8,
+      })
+      .setOrigin(0.5)
+      .setDepth(101)
+      .setScale(2.5)
+      .setAlpha(0);
+    this.tweens.add({ targets: title, scale: 1, alpha: 1, duration: 500, ease: 'Back.easeOut' });
+
+    this.add
+      .text(
+        width / 2,
+        height / 2 + 20,
+        'All five Infinity Swords are yours. The Master Skin is unlocked.',
+        {
+          fontFamily: 'monospace',
+          fontSize: '15px',
+          color: '#ffffff',
+          stroke: '#000000',
+          strokeThickness: 3,
+        },
+      )
+      .setOrigin(0.5)
+      .setDepth(101);
+
+    const gold = this.add.particles(width / 2, height / 2, '__WHITE', {
+      speed: { min: 60, max: 260 },
+      scale: { start: 4, end: 0 },
+      alpha: { start: 1, end: 0 },
+      lifespan: 1600,
+      quantity: 3,
+      tint: [0xffd700, 0xffffff, 0xc084fc],
+    });
+    gold.setDepth(101);
+
+    this.addContinueButton(height / 2 + 110, 102);
   }
 
   private showEndPanel(title: string, subtitle: string, color: number): void {
@@ -333,7 +566,7 @@ export class BattleScene extends Phaser.Scene {
     this.addContinueButton(height / 2 + 60);
   }
 
-  private addContinueButton(y: number): void {
+  private addContinueButton(y: number, depth = 93): void {
     const btn = this.add
       .text(this.scale.width / 2, y, '▶ Continue', {
         fontFamily: 'monospace',
@@ -344,40 +577,28 @@ export class BattleScene extends Phaser.Scene {
         padding: { x: 18, y: 10 },
       })
       .setOrigin(0.5)
-      .setDepth(93)
+      .setDepth(depth)
       .setInteractive({ useHandCursor: true });
     btn.on('pointerover', () => btn.setBackgroundColor('#44445a'));
     btn.on('pointerout', () => btn.setBackgroundColor('#2d2d3a'));
     btn.on('pointerdown', () => this.leave());
   }
 
-  /** Timer hit zero: the boss wins. Attempt resets on re-entry. */
-  private bossTimeUp(): void {
+  /** Timer hit zero: the enemy wins. Attempt resets on re-entry. */
+  private timeUp(): void {
     if (this.finished) return;
     this.finished = true;
     this.overlay?.setReadOnly(true);
 
-    const attackKey =
-      this.castle.id === 'arrays-hashing'
-        ? 'dragon_attack'
-        : ensureTintedTexture(this, 'dragon_attack', themeColorNumber(this.castle));
-    this.dragon.setTexture(attackKey);
-    this.dragon.setScale(180 / this.dragon.height);
-
-    this.tweens.add({
-      targets: this.dragon,
-      x: this.playerSprite.x + 60,
-      y: this.playerSprite.y - 20,
-      duration: 500,
-      ease: 'Cubic.easeIn',
-      onComplete: () => {
-        this.cameras.main.shake(400, 0.012);
-        const flash = this.add
-          .rectangle(this.halfW / 2, this.scale.height / 2, this.halfW, this.scale.height, 0xff0000, 0.45)
-          .setDepth(80);
-        this.tweens.add({ targets: flash, alpha: 0, duration: 600 });
-        this.tweens.add({ targets: this.playerSprite, alpha: 0.3, angle: -80, duration: 400 });
-      },
+    this.playEnemyAttackVisual(() => {
+      this.cameras.main.shake(400, 0.012);
+      MusicManager.playDefeatRoar(this);
+      const flashColor = this.isMaster ? MASTER_THEME_COLOR : 0xff0000;
+      const flash = this.add
+        .rectangle(this.halfW / 2, this.scale.height / 2, this.halfW, this.scale.height, flashColor, 0.45)
+        .setDepth(80);
+      this.tweens.add({ targets: flash, alpha: 0, duration: 600 });
+      this.tweens.add({ targets: this.playerSprite, alpha: 0.3, angle: -80, duration: 400 });
     });
 
     this.time.delayedCall(1100, () => {
@@ -397,16 +618,47 @@ export class BattleScene extends Phaser.Scene {
         .setAlpha(0);
       this.tweens.add({ targets: banner, scale: 1, alpha: 1, duration: 300, ease: 'Cubic.easeIn' });
       this.add
-        .text(this.scale.width / 2, this.scale.height / 2 + 10, 'The dragon guards its hoard another day...', {
-          fontFamily: 'monospace',
-          fontSize: '15px',
-          color: '#ffffff',
-          stroke: '#000000',
-          strokeThickness: 3,
-        })
+        .text(
+          this.scale.width / 2,
+          this.scale.height / 2 + 10,
+          this.isMaster
+            ? 'The shadow knight melts back into the dark, unbeaten...'
+            : 'The dragon guards its hoard another day...',
+          {
+            fontFamily: 'monospace',
+            fontSize: '15px',
+            color: '#ffffff',
+            stroke: '#000000',
+            strokeThickness: 3,
+          },
+        )
         .setOrigin(0.5)
         .setDepth(95);
       this.time.delayedCall(2200, () => this.leave());
+    });
+  }
+
+  /**
+   * Dragons swap to an attack texture and lunge with a red flash; the shadow
+   * knight has no attack frame yet, so it just lunges with a purple flash.
+   */
+  private playEnemyAttackVisual(onLanded: () => void): void {
+    if (!this.isMaster) {
+      const castle = this.castle!;
+      const attackKey =
+        castle.id === 'arrays-hashing'
+          ? 'dragon_attack'
+          : ensureTintedTexture(this, 'dragon_attack', this.themeColor());
+      this.enemySprite.setTexture(attackKey);
+      this.enemySprite.setScale(180 / this.enemySprite.height);
+    }
+    this.tweens.add({
+      targets: this.enemySprite,
+      x: this.playerSprite.x + 60,
+      y: this.playerSprite.y - 20,
+      duration: 500,
+      ease: 'Cubic.easeIn',
+      onComplete: onLanded,
     });
   }
 
@@ -425,7 +677,11 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private leave(): void {
-    this.scene.start('CastleMap', { castleId: this.castle.id });
+    if (this.isMaster) {
+      this.scene.start('MasterTower');
+      return;
+    }
+    this.scene.start('CastleMap', { castleId: this.castle!.id });
   }
 
   // ---------------------------------------------------------------- visuals
@@ -433,14 +689,15 @@ export class BattleScene extends Phaser.Scene {
   private drawArena(): void {
     const { height } = this.scale;
     const w = this.halfW;
-    const color = themeColorNumber(this.castle);
+    const color = this.themeColor();
     const g = this.add.graphics();
     // dark battle backdrop with a themed floor
     g.fillStyle(0x0e0e18, 1);
     g.fillRect(0, 0, w, height);
     g.fillStyle(0x14141f, 1);
+    const seed = this.isMaster ? 'master' : this.castle!.id;
     for (let i = 0; i < 40; i++) {
-      const rng = new Phaser.Math.RandomDataGenerator([`arena-${this.castle.id}`, `${i}`]);
+      const rng = new Phaser.Math.RandomDataGenerator([`arena-${seed}`, `${i}`]);
       g.fillRect(rng.between(0, w), rng.between(0, height - 220), 2, 2);
     }
     const floor = Phaser.Display.Color.IntegerToColor(color).darken(55).color;
@@ -455,35 +712,45 @@ export class BattleScene extends Phaser.Scene {
     g.fillRect(w - 2, 0, 2, height);
   }
 
-  private dragonTextureKey(): string {
+  private enemyTextureKey(): string {
+    if (this.isMaster) return 'shadow_knight';
+    const castle = this.castle!;
     const base = this.isBoss
       ? 'dragon_base'
       : this.nodeIndex >= 3
         ? 'ice_dragon_medium'
         : 'ice_dragon_small';
     // Fire boss stays untinted in castle 1; everything else takes the theme.
-    if (this.isBoss && this.castle.id === 'arrays-hashing') return base;
-    return ensureTintedTexture(this, base, themeColorNumber(this.castle));
+    if (this.isBoss && castle.id === 'arrays-hashing') return base;
+    return ensureTintedTexture(this, base, this.themeColor());
   }
 
   private defeatedTextureKey(): string {
+    const castle = this.castle!;
     const base = this.isBoss
       ? 'fire_dragon_boss_defeated'
       : this.nodeIndex >= 3
         ? 'ice_dragon_medium_defeated'
         : 'ice_dragon_small_defeated';
-    if (this.isBoss && this.castle.id === 'arrays-hashing') return base;
-    return ensureTintedTexture(this, base, themeColorNumber(this.castle));
+    if (this.isBoss && castle.id === 'arrays-hashing') return base;
+    return ensureTintedTexture(this, base, this.themeColor());
   }
 
   private spawnFighters(): void {
     const { height } = this.scale;
 
-    this.dragon = this.add.image(this.halfW - 130, height - 260, this.dragonTextureKey());
-    this.dragon.setScale((this.isBoss ? 170 : this.nodeIndex >= 3 ? 150 : 120) / this.dragon.height);
+    this.enemySprite = this.add.image(this.halfW - 130, height - 260, this.enemyTextureKey());
+    const enemyDisplayHeight = this.isMaster
+      ? 150
+      : this.isBoss
+        ? 170
+        : this.nodeIndex >= 3
+          ? 150
+          : 120;
+    this.enemySprite.setScale(enemyDisplayHeight / this.enemySprite.height);
     this.tweens.add({
-      targets: this.dragon,
-      y: this.dragon.y - 10,
+      targets: this.enemySprite,
+      y: this.enemySprite.y - 10,
       duration: 1400,
       yoyo: true,
       repeat: -1,
@@ -535,10 +802,11 @@ export class BattleScene extends Phaser.Scene {
     for (let i = 1; i < total; i++) {
       g.lineBetween(x + (w / total) * i, y, x + (w / total) * i, y + 18);
     }
-    if (!this.dragonNameDrawn) {
-      this.dragonNameDrawn = true;
+    if (!this.enemyNameDrawn) {
+      this.enemyNameDrawn = true;
+      const label = this.isMaster ? 'SHADOW KNIGHT' : this.isBoss ? 'CASTLE BOSS' : 'DRAGON';
       this.add
-        .text(x + w / 2, y - 18, this.isBoss ? 'CASTLE BOSS' : 'DRAGON', {
+        .text(x + w / 2, y - 18, label, {
           fontFamily: 'monospace',
           fontSize: '13px',
           fontStyle: 'bold',
@@ -550,5 +818,4 @@ export class BattleScene extends Phaser.Scene {
         .setDepth(40);
     }
   }
-  private dragonNameDrawn = false;
 }
